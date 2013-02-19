@@ -1,0 +1,20 @@
+Source: polaric-webconfig-plugin
+Section: hamradio
+Priority: optional
+Maintainer: Øyvind hanssen <ohanssen@acm.org>
+Build-Depends: debhelper (>= 8.0.0), openjdk-7-jdk, scala (>> 2.7)
+Standards-Version: 3.9.1
+Homepage: http://aprs.no/dokuwiki
+
+Package: polaric-webconfig-plugin
+Architecture: all
+Depends: polaric-aprsd (>= 1.1.1+), sudo, ${misc:Depends}
+Recommends: 
+Description: Polaric Server: APRS daemon part. 
+ The "Polaric Server" which is mainly a web based service to present APRS 
+ tracking information on maps and where the information is updated at real-
+ time. It is originally targeted for use by radio amateurs in voluntary search
+ and rescue service in Norway. It consists of a web application and a server 
+ program (APRS daemon). 
+ .
+ This is a plugin that adds a web-based config interface.  

@@ -1,0 +1,30 @@
+
+div#config_menu {
+  float: left;
+  width: 9.3em;
+  margin-right:1em;
+  padding-top:55px;
+  background:url(PolaricServer.png) no-repeat ; 
+  background-position: 4px 10px
+} 
+
+div#config_main {background: red; overflow: hidden; height: 40em}
+iframe#config_main {width: 100%; height: 100%; border: none }
+
+ul.menu li {
+  list-style-type: none;
+  list-style-position: inside; 
+  padding-top: 0.2em;
+  font-family: helvetica, sans-serif; 
+}
+
+ul.menu {
+  padding: 0.6em; 
+  border-top: 3px dotted #272;
+  border-bottom: 3px dotted #272
+}
+
+ul.menu ul {padding-left: 1em;}
+ul.menu ul li {font-size: smaller}
+
+ul.menu a:hover {background: #fff}

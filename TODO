@@ -1,0 +1,19 @@
+
+* Redirect on iframe content
+     DONE.
+     
+* Better way to handle user regexes?
+
+* Primary channels: Use select box and/or check if channel is in list at server. 
+
+* Checkboxes indicate changed value when used first time. FIX??
+
+* Consider: Can this plugin be installed without needing webapp? Alternative deb package 
+  with a minimal webapp setup, or could this be done by this package?
+
+* git
+
+* Change to empty string and update. Fix. 
+     DONE
+
+* Submit buttons. Do not use "Avbryt" when used inside a iframe?     
