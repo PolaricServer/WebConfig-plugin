@@ -17,4 +17,6 @@ Description: Polaric Server: APRS daemon part.
  and rescue service in Norway. It consists of a web application and a server 
  program (APRS daemon). 
  .
- This is a plugin that adds a web-based config interface.  
+ This is a plugin that adds a web-based config and administration interface.  
+ This currently supports setting the most important config parameters for
+ polaric-aprsd and restart the server. 
