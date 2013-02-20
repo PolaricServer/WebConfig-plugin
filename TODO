@@ -12,8 +12,10 @@
   with a minimal webapp setup, or could this be done by this package?
 
 * git
+     DONE
 
 * Change to empty string and update. Fix. 
      DONE
 
 * Submit buttons. Do not use "Avbryt" when used inside a iframe?     
+     DONE

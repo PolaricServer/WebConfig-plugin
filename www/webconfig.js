@@ -2,7 +2,9 @@
 
 
 ctxtMenu.addCallback("TOOLBAR", function (m)
-   {
+{     
+      if (!isAdmin())
+          return;
       m.add("Konfigurasjon...", function()
         { setTimeout('webConfig();', 100); });
    });

@@ -216,8 +216,8 @@ package no.polaric.webconfig
                 boolField("objects.rfgate.allow", "item9", "RF igating for objekter.") ++ br ++
                 textField("objects.rfgate.range", "item10", "Radius objekter:", "Område for utsending av objekter på RF", 6, 10, NUMBER, "(km)") ++
                 textField("igate.rfgate.path", "item11", "Digipeater sti, igate:", "Default (se også neste felt)", 20, 30, LIST) ++
-                textField("message.rfpath", "item12", "Digipeater sti, meldinger:", "..gjelder også meldinger til RF igate", 20, 30, LIST) ++
-                textField("objects.rfpath", "item13", "Digipeater sti, objekter: ", "...gjelder også meldinger til RF igate", 20, 30, LIST) ++
+                textField("message.rfpath", "item12", "Digipeater sti, meldinger:", "...gjelder også meldinger til RF igate", 20, 30, LIST) ++
+                textField("objects.rfpath", "item13", "Digipeater sti, objekter: ", "...gjelder også objekter til RF igate", 20, 30, LIST) ++
                 br ++ 
                 label("item14", "leftlab", "Fjernkontroll:", "Kryss av for å aktivere fjernkontroll") ++
                 boolField("remotectl.on", "item14", "Aktivert.") ++
