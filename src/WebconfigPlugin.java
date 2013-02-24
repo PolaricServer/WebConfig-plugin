@@ -28,7 +28,6 @@ public class WebconfigPlugin implements PluginManager.Plugin
             */
            _config = api.getConfig();
            _filename = System.getProperties().getProperty("datadir", ".")+"/"+"config.xml";
-           System.out.println("*** FILENAME = "+_filename);
            try { 
                FileInputStream cfin = new FileInputStream(_filename); 
                _config.loadFromXML(cfin);

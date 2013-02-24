@@ -172,6 +172,7 @@ package no.polaric.webconfig
                <li><a href="admin?cmd=info" target={target}>Status info</a></li>
                <li><a href="config" target={target}>Server konfig</a></li>
                <li><a href="config_posreport" target={target}>Egen posisjon</a></li>
+               <li><a href="config_mapdisplay" target={target}>Visning på kart</a></li>
                <li>Datakanaler...</li>
                <ul>
                {
@@ -252,6 +253,86 @@ package no.polaric.webconfig
          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), simple_submit)))
      }
      
+     
+      
+      def handle_config_mapdisplay(req : Request, res: Response) =
+      { 
+          val prefix = <h3>Kartvisnings innstillinger</h3>
+          
+          def fields(req : Request): NodeSeq =
+                textField("aprs.expiretime", "item1", "Maks inaktivitet:", "Hvor lenge kan objekt være inaktivt før det forsvinner", 4, 4, NUMBER, "(minutter)") ++
+                br ++
+                textField("map.trail.maxPause", "item2", "Maks inaktivitet for spor:", "Hvor lenge kan objekt være inaktivt før spor forsvinner", 4, 4, NUMBER, "(minutter)") ++
+                textField("map.trail.maxPause.extended", "item3", ".. sakte fart:", "Maks inaktivitetstid når fart er lav", 4, 4, NUMBER, "(minutter)") ++          
+                br ++
+                textField("map.trail.maxAge", "item4", "Sporlengde:", "Hvor langt tidsrom skal et spor tegnes for", 4, 4, NUMBER, "(minutter)") ++
+                textField("map.trail.maxAge.extended", "item5", ".. sakte fart:", "Sporlengde når fart er lav", 4, 4, NUMBER, "(minutter)") 
+         ;
+              
+              
+          def action(req : Request): NodeSeq = 
+          {
+               refreshPage(res, 3, "config_mapdisplay")
+               br ++ br ++
+               getField(req, "item1", "aprs.expiretime", 0, 1440) ++ 
+               getField(req, "item2", "map.trail.maxPause", 0, 1440) ++
+               getField(req, "item3", "map.trail.maxPause.extended", 0, 1440) 
+               getField(req, "item4", "map.trail.maxAge", 0, 1440) ++
+               getField(req, "item5", "map.trail.maxAge.extended", 0, 1440) 
+          }
+              
+          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), simple_submit)))
+      }     
+      
+      
+      
+      
+      def handle_passwd(req: Request, res: Response) = 
+      {
+          val prefix = <h3>Registrer bruker/passord</h3>
+          var username = getAuthUser(req)
+          
+          
+          
+          def fields(req : Request): NodeSeq =
+             label("item1", "lleftlab", "Brukernavn:", "Brukernavn for ny eller eksisterende bruker") ++
+             { if (authorizedForAdmin(req))
+                  textInput("item1", 20, 20, NAME, "")
+               else 
+                  <label id="item1">{username}</label>
+             } ++
+             br ++
+             label("item2", "lleftlab", "Passord:", "") ++
+             textInput("item2", 20, 30, ".*", "")
+          ;
+          
+          
+          
+          def action(req : Request): NodeSeq = 
+          {
+             username = if (authorizedForAdmin(req)) req.getParameter("item1") 
+                        else username
+             val passwd = req.getParameter("item2")             
+             val cmd = "/usr/bin/sudo /usr/bin/htpasswd -b /etc/polaric-webapp/users "+username+" "+passwd
+             val p = Runtime.getRuntime().exec(cmd)
+             val res = p.waitFor()
+             
+             if (res == 0)
+                 <h3>Passord for bruker '{username}' oppdatert</h3>
+             else if (res == 5)
+                 <h3>Feil: Oppgitt verdi er for lang</h3>
+             else if (res == 6)
+                 <h3>Feil: Oppgitt verdi inneholder ulovlige tegn</h3>
+             else 
+                 <h3>Feil: Kunne ikke oppdatere (server problem)</h3>
+       
+          }
+ 
+ 
+          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_AUTH(fields), IF_AUTH(action))))
+      }
+      
+      
       
       
       
