@@ -7,7 +7,7 @@ ctxtMenu.addCallback("TOOLBAR", function (m)
           return;
       m.add(null);
       if (isAdmin() || canUpdate()) {
-         m.add("Bruker/passord..", passwd);
+         m.add("Bruker/passord..", setPasswd);
          if (isAdmin())
             m.add("Admin/konfigurasjon..", webConfig);
          else
@@ -16,7 +16,7 @@ ctxtMenu.addCallback("TOOLBAR", function (m)
 });
 
 
-function passwd()
+function setPasswd()
   { fullPopupWindow('Passord', server_url + 'srv/passwd', 430, 250); }
 
 function webConfig()
