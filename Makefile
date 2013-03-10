@@ -27,6 +27,8 @@ INSTALL_WEBAPP = $(DESTDIR)/etc/polaric-webapp/www/auto
 INSTALL_CONFIG = $(DESTDIR)/etc/polaric-aprsd
    INSTALL_LOG = $(DESTDIR)/var/log/polaric
   INSTALL_SUDO = $(DESTDIR)/etc/sudoers.d
+INSTALL_PLUGDIR= $(INSTALL_CONFIG)/config.d
+  
   
   
 ##################################################
@@ -43,11 +45,13 @@ all: aprs
 
 install: polaric-aprsd.jar
 	install -d $(INSTALL_CONFIG)
+	install -d $(INSTALL_PLUGDIR)
 	install -d $(INSTALL_BIN)
 	install -d $(INSTALL_JAR)
 	install -d $(INSTALL_WWW)
 	install -d $(INSTALL_WEBAPP)
 	install -d $(INSTALL_SUDO)
+	install -m 644 webconfig.ini $(INSTALL_PLUGDIR)
 	install -m 644 www/webconfig.js $(INSTALL_WEBAPP)
 	install -m 644 www/config_menu.css $(INSTALL_WWW)
 	install -m 644 www/PolaricServer.png $(INSTALL_WWW)
