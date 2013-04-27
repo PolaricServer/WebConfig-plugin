@@ -25,3 +25,12 @@
   changes to server.ini have no effect because parameters are overridden? 
   
 * Ask if user wants to save changes if trying to leave page. Javascript? 
+
+
+* Restart: Wait longer before re-loading page. 
+     DONE
+     
+* Update of channel-list: Update menu 
+
+* Filter string field is too short. Fix.
+     DONE

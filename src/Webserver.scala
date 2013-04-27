@@ -142,11 +142,11 @@ package no.polaric.webconfig
       def handle_restartServer(req : Request, res: Response) =
       {
           // val head = 
-          refreshPage(res, 4, "admin?cmd=info")
+          refreshPage(res, 7, "admin?cmd=info")
           
           def action(req : Request): NodeSeq = {
              val cmd = "/usr/bin/sudo /etc/init.d/polaric-aprsd restart"
-             Runtime.getRuntime().exec(cmd)    
+             Runtime.getRuntime().exec(cmd)
              <br/>
              <h2>Restart server...</h2>
           }
@@ -166,7 +166,7 @@ package no.polaric.webconfig
           /*
            * Meny genereres dynamisk. Avhengig av konfig. 
            */
-          def action(req : Request): NodeSeq = 
+          def action(req : Request): NodeSeq =
              <div id="config_menu">
              <ul class="menu">
                <li><a href="admin?cmd=info" target={target}>Status info</a></li>
@@ -421,7 +421,7 @@ package no.polaric.webconfig
                     textField(chp+".host", "item4", "Server adresse:", "DNS navn eller IP adresse for APRS/IS server", 20, 30, NAME) ++
                     textField(chp+".port", "item5", "Server port:", "Portnr", 6, 6, NUMBER) ++
                     textField(chp+".pass", "item6", "Passkode:", "APRS/IS verifikasjonskode", 6, 6, NUMBER) ++
-                    textField(chp+".filter", "item7", "Filter:", "APRS/IS filter-streng", 20, 30, TEXT) 
+                    textField(chp+".filter", "item7", "Filter:", "APRS/IS filter-streng", 30, 50, TEXT) 
                  else 
                     textField(chp+".port", "item8", "Port:", "Serieport enhetsnavn (f.eks. /dev/ttyS0)", 12, 20, NAME) ++
                     textField(chp+".baud", "item9", "Baud:", "", 6, 8, NUMBER) 
