@@ -1,36 +1,16 @@
+VERSION 1.2.1 and/or later
+--------------------------
 
-* Redirect on iframe content
-     DONE.
-     
 * Better way to handle user regexes?
 
 * Primary channels: Use select box and/or check if channel is in list at server. 
-
-* Checkboxes indicate changed value when used first time. FIX??
-     WONTFIX
      
 * Consider: Can this plugin be installed without needing webapp? Alternative deb package 
   with a minimal webapp setup, or could this be done by this package?
-
-* git
-     DONE
-
-* Change to empty string and update. Fix. 
-     DONE
-
-* Submit buttons. Do not use "Avbryt" when used inside a iframe?     
-     DONE
 
 * Conflict between changes in server.ini and config.xml??? Is it acceptable that
   changes to server.ini have no effect because parameters are overridden? 
   
 * Ask if user wants to save changes if trying to leave page. Javascript? 
 
-
-* Restart: Wait longer before re-loading page. 
-     DONE
-     
 * Update of channel-list: Update menu 
-
-* Filter string field is too short. Fix.
-     DONE
