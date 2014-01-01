@@ -32,7 +32,7 @@ plugins = no.polaric.webconfig.WebconfigPlugin
 ## Building from source 
 
 Build from the source is done by a plain old makefile. Yes I know :)
-Maybe I move to Maven a little later. Setup for generating Debian
+Maybe I move to Ant or Maven a little later. Setup for generating Debian
 packages is included. You may use the 'debuild' command.
 
 You will need JDK (Oracle or OpenJDK) version 7 or later, the Scala
