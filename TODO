@@ -1,6 +1,9 @@
 VERSION 1.2.1 and/or later
 --------------------------
 
+* Add restrict attribute to channels
+     DONE: 
+     
 * Better way to handle user regexes?
 
 * Primary channels: Use select box and/or check if channel is in list at server. 
@@ -14,3 +17,6 @@ VERSION 1.2.1 and/or later
 * Ask if user wants to save changes if trying to leave page. Javascript? 
 
 * Update of channel-list: Update menu 
+
+* Revert back to default values. Button in webinterface. 
+
