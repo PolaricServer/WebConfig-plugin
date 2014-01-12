@@ -426,7 +426,8 @@ package no.polaric.webconfig
                     textField(chp+".port", "item8", "Port:", "Serieport enhetsnavn (f.eks. /dev/ttyS0)", 12, 20, NAME) ++
                     textField(chp+".baud", "item9", "Baud:", "", 6, 8, NUMBER) 
                } ++ br ++
-               textField(chp+".style", "item10", "CSS stilnavn:", "", 10, 10, NAME)
+               boolField(chp+".restrict", "item10", "Synlig bare for innloggede brukere") ++
+               textField(chp+".style", "item11", "CSS stilnavn:", "", 10, 10, NAME)
          }
          
          
@@ -446,7 +447,8 @@ package no.polaric.webconfig
                    getField(req, "item8", chp+".port", NAME) ++
                    getField(req, "item9", chp+".baud", 300, 999999)
               } ++
-              getField(req, "item10", chp+".style", NAME) 
+              getField(req, "item10", chp+".restrict", BOOLEAN) ++
+              getField(req, "item11", chp+".style", NAME) 
          }
               
          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), simple_submit)))     
