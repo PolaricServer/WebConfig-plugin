@@ -426,7 +426,8 @@ package no.polaric.webconfig
                     textField(chp+".port", "item8", "Port:", "Serieport enhetsnavn (f.eks. /dev/ttyS0)", 12, 20, NAME) ++
                     textField(chp+".baud", "item9", "Baud:", "", 6, 8, NUMBER) 
                } ++ br ++
-               boolField(chp+".restrict", "item10", "Synlig bare for innloggede brukere") ++
+               label("item10", "leftlab", "Synlighet:", "Kryss av for å begrense innsyn til innloggede brukere") ++
+               boolField(chp+".restrict", "item10", "Bare for innloggede brukere") ++ br ++
                textField(chp+".style", "item11", "CSS stilnavn:", "", 10, 10, NAME)
          }
          
