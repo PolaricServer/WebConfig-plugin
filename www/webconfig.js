@@ -22,3 +22,5 @@ function setPasswd()
 function webConfig()
   { fullPopupWindow('Konfig', server_url + 'srv/config_menu', 900, 700); }
 
+function adminWindow()
+  { fullPopupWindow('Status', server_url + 'srv/admin?cmd=info', 800, 600); }
