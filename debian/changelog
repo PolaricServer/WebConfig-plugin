@@ -1,3 +1,9 @@
+polaric-webconfig-plugin (1.4.0) unstable; urgency=low
+
+  * Add restrict attribute to channels
+
+ -- Øyvind Hanssen <ohanssen@acm.org>  Mon, 10 Mar 2014 23:10:06 +0000
+
 polaric-webconfig-plugin (1.2.0) unstable; urgency=low
 
   * First release 

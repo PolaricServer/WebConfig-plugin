@@ -1,8 +1,5 @@
-VERSION 1.2.1 and/or later
+VERSION 1.4.1 and/or later
 --------------------------
-
-* Add restrict attribute to channels
-     DONE: 
      
 * Better way to handle user regexes?
 
