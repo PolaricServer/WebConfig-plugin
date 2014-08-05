@@ -74,7 +74,7 @@ package no.polaric.webconfig
           
           
           
-          
+      /* Regular expressions that define format of input of different types */    
       val TEXT = ".*"
       val NAME = "[A-Za-z0-9_\\-\\.\\/]+"
       val LIST = "([A-Za-z0-9_\\-\\.]+)(,\\s?([A-Za-z0-9_\\-\\.]+))*"
@@ -84,7 +84,14 @@ package no.polaric.webconfig
       val CHANTYPE = "APRSIS|KISS|TNC2"
       val UTMPOS = "[0-9]{2}[A-Za-z]\\s+[0-9]{6}\\s+[0-9]{7}"
       
+      /* Set to true if value of one or more fields has changed */
+      var changed = false;
       
+      
+      /**
+       * Get value of a given field from HTTP request parameters.
+       * Check if format of input is correct and if field value has changed. 
+       */
       protected def _getField(req : Request, value: String, propname: String, pattern: String, 
           isnum: Boolean, min: Int, max: Int): NodeSeq = 
       {
@@ -105,7 +112,9 @@ package no.polaric.webconfig
               else x
               
           if (("".equals(x) && !"".equals(xold)) || (x != null && x.matches(pattern) && checkNum(x))) 
+               /* Test om vi har endret verdi på et felt */
                if (!x.equals(xold)) {
+                   changed = true
                    _api.getConfig().setProperty(propname, x)
                     <span class="fieldsuccess">Field <b>{propname}</b> = '{x}'. Changed.<br/></span>
                }               
@@ -142,7 +151,7 @@ package no.polaric.webconfig
       def handle_restartServer(req : Request, res: Response) =
       {
           // val head = 
-          refreshPage(res, 7, "admin?cmd=info")
+          refreshPage(res, 7, "config_menu")
           
           def action(req : Request): NodeSeq = {
              // val cmd = "/usr/bin/sudo /etc/init.d/polaric-aprsd restart"
@@ -161,43 +170,63 @@ package no.polaric.webconfig
       
       
       
+          
       
-      def handle_config_menu(req : Request, res: Response) =
+      /** 
+       * Override htmlBody, in order to add a menu/status on the left side. 
+       */
+      override def htmlBody(req: Request, xhead : NodeSeq, content : NodeSeq) : Node =
       {
-          val target = "config_main"
-          val head = <link href={fprefix(req)+"/config_menu.css"} rel="stylesheet" type="text/css" />
-          
-          
-          /*
-           * Meny genereres dynamisk. Avhengig av konfig. 
-           */
-          def action(req : Request): NodeSeq =
+           val head = <link href={fprefix(req)+"/config_menu.css"} rel="stylesheet" type="text/css" />
+           val heads = if (xhead==null) head else head ++ xhead 
+           
+           def body = 
              <div id="config_menu">
              <ul class="menu">
-               <li><a href="admin?cmd=info" target={target}>Status info</a></li>
-               <li><a href="config" target={target}>Server konfig</a></li>
-               <li><a href="config_posreport" target={target}>Egen posisjon</a></li>
-               <li><a href="config_mapdisplay" target={target}>Visning på kart</a></li>
+               <li><a href="config_menu">Status info</a></li>
+               <li><a href="config">Server konfig</a></li>
+               <li><a href="config_posreport">Egen posisjon</a></li>
+               <li><a href="config_mapdisplay">Visning på kart</a></li>
                <li>Datakanaler...</li>
                <ul>
                {
                   val chs = _api.getProperty("channels", null).split(",(\\s)*")
                   for (ch <- chs) yield
-                     <li><a href={"config_chan?chan="+ch} target={target}>{ch}</a></li>
+                     <li><a href={"config_chan?chan="+ch}>{ch}</a></li>
                }
                </ul>
              </ul>
              <br/>
-             <a id="restart" href="restartServer" target={target}><b>[RESTART]</b></a>
+             <a id="restart" href="restartServer"><b>[RESTART]</b></a>
+             {
+                if (changed)
+                   <div class="status">
+                      Endringer er gjort. Restart for å aktivere.
+                   </div>
+                else null
+             }
              
              </div>
              <div id="config_main">
-                <iframe id="config_main" name="config_main" src="admin?cmd=info"/>
+                { content }
              </div>
              ;
              
-             
-          printHtml (res, htmlBody(req, head, action(req)))
+             super.htmlBody(req, heads, body) 
+      }
+      
+      
+      
+      /**
+       * This is the first menu choice. It just puts the admin status from aprsd in am iframe 
+       */
+      def handle_config_menu(req : Request, res: Response) =
+      {
+          def action(req : Request): NodeSeq =
+             <iframe id="config_main" name="config_main" src="admin?cmd=info"/>
+             ;   
+                          
+          printHtml (res, htmlBody(req, null, action(req)))
       }
       
       
@@ -255,7 +284,7 @@ package no.polaric.webconfig
                getField(req, "item16", "message.auth.key", TEXT)
          }
               
-         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), simple_submit)))
+         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, simple_submit)))
      }
      
      
@@ -281,12 +310,12 @@ package no.polaric.webconfig
                br ++ br ++
                getField(req, "item1", "aprs.expiretime", 0, 1440) ++ 
                getField(req, "item2", "map.trail.maxPause", 0, 1440) ++
-               getField(req, "item3", "map.trail.maxPause.extended", 0, 1440) 
+               getField(req, "item3", "map.trail.maxPause.extended", 0, 1440) ++
                getField(req, "item4", "map.trail.maxAge", 0, 1440) ++
                getField(req, "item5", "map.trail.maxAge.extended", 0, 1440) 
           }
               
-          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), simple_submit)))
+          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, simple_submit)))
       }     
       
       
@@ -334,7 +363,7 @@ package no.polaric.webconfig
           }
  
  
-          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_AUTH(fields), IF_AUTH(action))))
+          printHtml (res, super.htmlBody (req, null, htmlForm(req, prefix, IF_AUTH(fields), IF_AUTH(action))))
       }
       
       
@@ -392,7 +421,7 @@ package no.polaric.webconfig
               getField(req, "item15", "ownposition.maxturn", 0, 360) 
          }
               
-         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), simple_submit)))
+         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, simple_submit)))
      }
      
      
@@ -457,7 +486,7 @@ package no.polaric.webconfig
               getField(req, "item11", chp+".style", NAME) 
          }
               
-         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), simple_submit)))     
+         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, simple_submit)))     
      }
      
      
