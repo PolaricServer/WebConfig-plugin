@@ -145,8 +145,13 @@ package no.polaric.webconfig
           refreshPage(res, 7, "admin?cmd=info")
           
           def action(req : Request): NodeSeq = {
-             val cmd = "/usr/bin/sudo /usr/bin/nohup /etc/init.d/polaric-aprsd restart &"
-             Runtime.getRuntime().exec(cmd)
+             // val cmd = "/usr/bin/sudo /etc/init.d/polaric-aprsd restart"
+             // Runtime.getRuntime().exec(cmd)
+             
+             val pb = new ProcessBuilder("/usr/bin/sudo", "-n", "/usr/bin/polaric-restart")
+             pb.inheritIO();
+             pb.start(); 
+             
              <br/>
              <h2>Restart server...</h2>
           }
