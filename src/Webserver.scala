@@ -180,19 +180,39 @@ package no.polaric.webconfig
            val head = <link href={fprefix(req)+"/config_menu.css"} rel="stylesheet" type="text/css" />
            val heads = if (xhead==null) head else head ++ xhead 
            
+           var selected = req.getParameter("mid")           
+           selected = if (selected==null) "1" else selected
+           
+           
+           def mitem(url:String, id: Integer, txt: String) : Node = 
+           {
+              val delim = if (url.contains("?")) "&" else "?"
+              val cls = if ((""+id).equals(selected)) "selected" else ""
+              
+              <li class={cls}>
+                <a href={ url + delim + "mid="+id }>{txt}</a>
+              </li>
+           }
+           
+           
+           
            def body = 
              <div id="config_menu">
              <ul class="menu">
-               <li><a href="config_menu">Status info</a></li>
-               <li><a href="config">Server konfig</a></li>
-               <li><a href="config_posreport">Egen posisjon</a></li>
-               <li><a href="config_mapdisplay">Visning på kart</a></li>
+               { mitem("config_menu", 1, "Status info") ++
+                 mitem("config", 2, "Server konfig") ++
+                 mitem("config_posreport", 3, "Egen posisjon") ++
+                 mitem("config_mapdisplay", 4, "Visning på kart")
+               }
                <li>Datakanaler...</li>
                <ul>
                {
                   val chs = _api.getProperty("channels", null).split(",(\\s)*")
-                  for (ch <- chs) yield
-                     <li><a href={"config_chan?chan="+ch}>{ch}</a></li>
+                  var mid=4
+                  for (ch <- chs) yield {
+                     mid += 1;
+                     mitem("config_chan?chan="+ch, mid, ch)
+                  }
                }
                </ul>
              </ul>
@@ -264,7 +284,7 @@ package no.polaric.webconfig
               
          def action(req : Request): NodeSeq = 
          {
-               refreshPage(res, 3, "config")
+               refreshPage(res, 3, "config?mid=2")
                br ++ br ++
                getField(req, "item1", "default.mycall", CALLSIGN) ++ 
                getField(req, "item2", "user.admin", TEXT) ++ 
@@ -306,7 +326,7 @@ package no.polaric.webconfig
               
           def action(req : Request): NodeSeq = 
           {
-               refreshPage(res, 3, "config_mapdisplay")
+               refreshPage(res, 3, "config_mapdisplay?mid=4")
                br ++ br ++
                getField(req, "item1", "aprs.expiretime", 0, 1440) ++ 
                getField(req, "item2", "map.trail.maxPause", 0, 1440) ++
@@ -403,7 +423,7 @@ package no.polaric.webconfig
               
          def action(req : Request): NodeSeq = 
          {       
-              refreshPage(res, 3, "config_posreport")
+              refreshPage(res, 3, "config_posreport?mid=3")
               br ++ br ++
               getField(req, "item1", "ownposition.tx.on", BOOLEAN) ++
               getField(req, "item2", "ownposition.tx.allowrf", BOOLEAN) ++
@@ -469,7 +489,7 @@ package no.polaric.webconfig
          
          def action(req : Request): NodeSeq = 
          {
-              refreshPage(res, 3, "config_chan?chan="+cid)
+              refreshPage(res, 3, "config_chan?mid="+4+cid+"&"+"chan="+cid)
               br ++ br ++
               getField(req, "item1", chp+".on", BOOLEAN) ++
               getField(req, "item2", chp+".type", CHANTYPE) ++
