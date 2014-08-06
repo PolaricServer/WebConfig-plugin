@@ -55,6 +55,7 @@ install: polaric-aprsd.jar
 	install -m 644 www/webconfig.js $(INSTALL_WEBAPP)
 	install -m 644 www/config_menu.css $(INSTALL_WWW)
 	install -m 644 www/PolaricServer.png $(INSTALL_WWW)
+	install -m 644 www/pointer.gif $(INSTALL_WWW)
 	install -m 755 -d $(INSTALL_LOG)
 	install -m 644 polaric-webconfig.jar $(INSTALL_JAR)
 	cp sudoers.d $(INSTALL_SUDO)/polaric-plugin-webconfig

@@ -27,10 +27,10 @@ ul.menu {
 ul.menu ul {padding-left: 1em;}
 ul.menu ul li {font-size: smaller}
 
-ul.menu a:hover {background: #fff}
+a:hover {background: #fff}
 
 ul.menu li.selected {
-  background-image: url(/aprs/images/pointer.gif);
+  background-image: url(pointer.gif);
   background-position: 0px center;
   background-repeat: no-repeat;
 }
