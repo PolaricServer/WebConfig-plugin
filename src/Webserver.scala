@@ -147,16 +147,18 @@ package no.polaric.webconfig
           ; 
            
       
-      
+    
+      /**
+       * Handle restarting of the server by calling external script. 
+       * Note that this must use sudo to operate with root privileges. 
+       */
       def handle_restartServer(req : Request, res: Response) =
       {
           // val head = 
           refreshPage(res, 7, "config_menu")
           
           def action(req : Request): NodeSeq = {
-             // val cmd = "/usr/bin/sudo /etc/init.d/polaric-aprsd restart"
-             // Runtime.getRuntime().exec(cmd)
-             
+
              val pb = new ProcessBuilder("/usr/bin/sudo", "-n", "/usr/bin/polaric-restart")
              pb.inheritIO();
              pb.start(); 
@@ -251,6 +253,9 @@ package no.polaric.webconfig
       
       
       
+      /**
+       * The main configuration of aprsd. Callsign, users, channels. Igate. Remote control.
+       */
       def handle_config(req : Request, res: Response) =
       { 
           val prefix = <h3>Konfigurasjon av Polaric APRSD</h3>
@@ -304,11 +309,13 @@ package no.polaric.webconfig
                getField(req, "item16", "message.auth.key", TEXT)
          }
               
-         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, simple_submit)))
+         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, default_submit)))
      }
      
      
-      
+      /**
+       * Parameters related to showing tracks on map. 
+       */
       def handle_config_mapdisplay(req : Request, res: Response) =
       { 
           val prefix = <h3>Kartvisnings innstillinger</h3>
@@ -335,61 +342,15 @@ package no.polaric.webconfig
                getField(req, "item5", "map.trail.maxAge.extended", 0, 1440) 
           }
               
-          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, simple_submit)))
+          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, default_submit)))
       }     
       
       
       
       
-      def handle_passwd(req: Request, res: Response) = 
-      {
-          val prefix = <h3>Registrer bruker/passord</h3>
-          var username = getAuthUser(req)
-          
-          
-          
-          def fields(req : Request): NodeSeq =
-             label("item1", "lleftlab", "Brukernavn:", "Brukernavn for ny eller eksisterende bruker") ++
-             { if (authorizedForAdmin(req))
-                  textInput("item1", 20, 20, NAME, "")
-               else 
-                  <label id="item1">{username}</label>
-             } ++
-             br ++
-             label("item2", "lleftlab", "Passord:", "") ++
-             textInput("item2", 20, 30, ".*", "")
-          ;
-          
-          
-          
-          def action(req : Request): NodeSeq = 
-          {
-             username = if (authorizedForAdmin(req)) req.getParameter("item1") 
-                        else username
-             val passwd = req.getParameter("item2")             
-             val cmd = "/usr/bin/sudo /usr/bin/htpasswd -b /etc/polaric-webapp/users "+username+" "+passwd
-             val p = Runtime.getRuntime().exec(cmd)
-             val res = p.waitFor()
-             
-             if (res == 0)
-                 <h3>Passord for bruker '{username}' oppdatert</h3>
-             else if (res == 5)
-                 <h3>Feil: Oppgitt verdi er for lang</h3>
-             else if (res == 6)
-                 <h3>Feil: Oppgitt verdi inneholder ulovlige tegn</h3>
-             else 
-                 <h3>Feil: Kunne ikke oppdatere (server problem)</h3>
-       
-          }
- 
- 
-          printHtml (res, super.htmlBody (req, null, htmlForm(req, prefix, IF_AUTH(fields), IF_AUTH(action))))
-      }
-      
-      
-      
-      
-      
+      /**
+       * Using the Polaric APRSD as a tracker that send position reports. 
+       */
       def handle_config_posreport(req : Request, res: Response) =
       { 
           val prefix = <h3>Sporing av egen posisjon</h3>
@@ -441,12 +402,14 @@ package no.polaric.webconfig
               getField(req, "item15", "ownposition.maxturn", 0, 360) 
          }
               
-         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, simple_submit)))
+         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, default_submit)))
      }
      
      
      
-     
+     /**
+      * Configuration of each individual channel. 
+      */
      def handle_config_chan(req: Request, res: Response) = 
      {
          val cid = req.getParameter("chan")
@@ -506,8 +469,60 @@ package no.polaric.webconfig
               getField(req, "item11", chp+".style", NAME) 
          }
               
-         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, simple_submit)))     
+         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, default_submit)))     
      }
+     
+     
+    
+     /**
+      * Handle password chancge (to be placed in separate window). 
+      */
+      def handle_passwd(req: Request, res: Response) = 
+      {
+          val prefix = <h3>Registrer bruker/passord</h3>
+          var username = getAuthUser(req)
+          
+          
+          
+          def fields(req : Request): NodeSeq =
+             label("item1", "lleftlab", "Brukernavn:", "Brukernavn for ny eller eksisterende bruker") ++
+             { if (authorizedForAdmin(req))
+                  textInput("item1", 20, 20, NAME, "")
+               else 
+                  <label id="item1">{username}</label>
+             } ++
+             br ++
+             label("item2", "lleftlab", "Passord:", "") ++
+             textInput("item2", 20, 30, ".*", "")
+          ;
+          
+          
+          
+          def action(req : Request): NodeSeq = 
+          {
+             username = if (authorizedForAdmin(req)) req.getParameter("item1") 
+                        else username
+             val passwd = req.getParameter("item2")             
+             val cmd = "/usr/bin/sudo /usr/bin/htpasswd -b /etc/polaric-webapp/users "+username+" "+passwd
+             val p = Runtime.getRuntime().exec(cmd)
+             val res = p.waitFor()
+             
+             if (res == 0)
+                 <h3>Passord for bruker '{username}' oppdatert</h3>
+             else if (res == 5)
+                 <h3>Feil: Oppgitt verdi er for lang</h3>
+             else if (res == 6)
+                 <h3>Feil: Oppgitt verdi inneholder ulovlige tegn</h3>
+             else 
+                 <h3>Feil: Kunne ikke oppdatere (server problem)</h3>
+       
+          }
+ 
+ 
+          printHtml (res, super.htmlBody (req, null, htmlForm(req, prefix, IF_AUTH(fields), IF_AUTH(action))))
+      }
+      
+     
      
      
   }
