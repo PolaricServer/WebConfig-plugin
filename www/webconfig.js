@@ -1,7 +1,7 @@
  
 
 
-ctxtMenu.addCallback("TOOLBAR", function (m)
+ctxtMenu.addCallback("MAIN", function (m)
 {     
       if (!isAdmin() && !canUpdate())
           return;
