@@ -81,7 +81,7 @@ package no.polaric.webconfig
       val NUMBER = "\\-?[0-9]+"
       val BOOLEAN = "true|false|TRUE|FALSE"
       val CALLSIGN = "[A-Za-z0-9]{3,6}(\\-[0-9]{1,2})?"
-      val CHANTYPE = "APRSIS|KISS|TNC2"
+      val CHANTYPE = "APRSIS|KISS|TCPKISS|TNC2"
       val UTMPOS = "[0-9]{2}[A-Za-z]\\s+[0-9]{6}\\s+[0-9]{7}"
       
       /* Set to true if value of one or more fields has changed */
@@ -155,7 +155,7 @@ package no.polaric.webconfig
       def handle_restartServer(req : Request, res: Response) =
       {
           // val head = 
-          refreshPage(res, 7, "config_menu")
+          refreshPage(res, 10, "config_menu")
           
           def action(req : Request): NodeSeq = {
 
@@ -417,6 +417,7 @@ package no.polaric.webconfig
          val prefix = <h3>Kanal '{cid}'</h3>
 
          val is_aprsis = _api.getProperty(chp+".type", "APRSIS").equals("APRSIS")
+         val is_tcpkiss = _api.getProperty(chp+".type", "APRSIS").equals("TCPKISS")
          val ch = _api.getChanManager().get(cid)
 
          
@@ -432,13 +433,16 @@ package no.polaric.webconfig
                } ++
                label("item1", "leftlab", "Kanal:", "Kryss av for å aktivere kanal") ++
                boolField(chp+".on", "item1", "Aktivert") ++ br ++
-               textField(chp+".type", "item2", "Type:", "Type (APRSIS, TNC2 eller KISS)", 10, 10, CHANTYPE) ++
+               textField(chp+".type", "item2", "Type:", "Type (APRSIS, TNC2, KISS eller TCPKISS)", 10, 10, CHANTYPE) ++
                { 
-                 if (is_aprsis) 
-                    textField(chp+".host", "item4", "Server adresse:", "DNS navn eller IP adresse for APRS/IS server", 20, 30, NAME) ++
+                 if (is_aprsis || is_tcpkiss) 
+                    textField(chp+".host", "item4", "Server adresse:", "DNS navn eller IP adresse for server", 20, 30, NAME) ++
                     textField(chp+".port", "item5", "Server port:", "Portnr", 6, 6, NUMBER) ++
-                    textField(chp+".pass", "item6", "Passkode:", "APRS/IS verifikasjonskode", 6, 6, NUMBER) ++
-                    textField(chp+".filter", "item7", "Filter:", "APRS/IS filter-streng", 30, 50, TEXT) 
+                    { if (is_aprsis)
+                        textField(chp+".pass", "item6", "Passkode:", "APRS/IS verifikasjonskode", 6, 6, NUMBER) ++
+                        textField(chp+".filter", "item7", "Filter:", "APRS/IS filter-streng", 30, 50, TEXT) 
+                      else <span></span> 
+                    } 
                  else 
                     textField(chp+".port", "item8", "Port:", "Serieport enhetsnavn (f.eks. /dev/ttyS0)", 12, 20, NAME) ++
                     textField(chp+".baud", "item9", "Baud:", "", 6, 8, NUMBER) 
@@ -456,11 +460,14 @@ package no.polaric.webconfig
               br ++ br ++
               getField(req, "item1", chp+".on", BOOLEAN) ++
               getField(req, "item2", chp+".type", CHANTYPE) ++
-              { if (is_aprsis)
+              { if (is_aprsis || is_tcpkiss)
                    getField(req, "item4", chp+".host", NAME) ++ 
                    getField(req, "item5", chp+".port", 1024, 65535) ++ 
-                   getField(req, "item6", chp+".pass", 0, 99999) ++ 
-                   getField(req, "item7", chp+".filter", TEXT) 
+                   { if (is_aprsis) 
+                        getField(req, "item6", chp+".pass", 0, 99999) ++ 
+                        getField(req, "item7", chp+".filter", TEXT)
+                     else <span></span>
+                   }
                 else
                    getField(req, "item8", chp+".port", NAME) ++
                    getField(req, "item9", chp+".baud", 300, 999999)
