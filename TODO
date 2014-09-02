@@ -14,15 +14,3 @@ VERSION 1.4.1 and/or later
 * Update of channel-list: Update menu 
 
 * Revert back to default values. Button in webinterface. 
-
-* Restart doesn't work. Fix. 
-    DONE. 
-    
-* Indicate the need to restart if changes are made. 
-    DONE. 
-    
-* Update menu on the left side (dont use iframe). 
-    DONE. 
-   
-* Indicate menu-choice in menu. 
-    DONE. 
