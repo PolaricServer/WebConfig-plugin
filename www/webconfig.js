@@ -17,10 +17,10 @@ ctxtMenu.addCallback("MAIN", function (m)
 
 
 function setPasswd()
-  { fullPopupWindow('Passord', server_url + 'srv/passwd', 430, 250); }
+  { fullPopupWindow('Passord', server_url + 'srv/passwd'+'?lang='+language, 430, 250); }
 
 function webConfig()
-  { fullPopupWindow('Konfig', server_url + 'srv/config_menu', 900, 700); }
+  { fullPopupWindow('Konfig', server_url + 'srv/config_menu'+'?lang='+language, 900, 700); }
 
 function adminWindow()
-  { fullPopupWindow('Status', server_url + 'srv/admin?cmd=info', 800, 600); }
+  { fullPopupWindow('Status', server_url + 'srv/admin?cmd=info'+'&lang='+language, 800, 600); }

@@ -12,7 +12,7 @@
 ## JAR:   Jar archiver
 ##########################################################################
   CLASSDIR = classes
- CLASSPATH = polaric-aprsd.jar:jcoord.jar:simple.jar
+ CLASSPATH =  /usr/share/java/gettext-commons.jar:polaric-aprsd.jar:jcoord.jar:simple.jar
 INSTALLDIR = /etc/polaric-aprsd/plugins
      JAVAC = javac -target 1.7
        JAR = jar
@@ -37,8 +37,8 @@ INSTALL_PLUGDIR= $(INSTALL_CONFIG)/config.d
 ##################################################
     LIBDIR = _lib
  JAVAFLAGS =
- PACKAGES  = core scala
-
+  PACKAGES = core i18n scala
+ LANGUAGES = no
 
 
 all: aprs
@@ -85,7 +85,12 @@ $(LIBDIR):
 core: 
 	$(JAVAC) -d $(TDIR) $(JAVAFLAGS) src/*.java 
 
+	
+.PHONY : i18n
+i18n: 
+	bash msg-compile.sh $(LANGUAGES)
 
+	
 .PHONY : scala
 scala:            
 	scalac -d $(TDIR) -classpath $(LIBDIR):$(CLASSPATH) src/*.scala

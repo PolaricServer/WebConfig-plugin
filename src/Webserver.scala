@@ -10,8 +10,7 @@ import org.simpleframework.http.core.Container
 import org.simpleframework.transport.connect.Connection
 import org.simpleframework.transport.connect.SocketConnection
 import org.simpleframework.http._
-
-
+import org.xnap.commons.i18n._
 
 
 package no.polaric.webconfig
@@ -21,7 +20,7 @@ package no.polaric.webconfig
       ( val api: ServerAPI ) extends ServerBase(api) with ServerUtils
   {
       val _wcp = api.properties().get("webconfig.plugin").asInstanceOf[WebconfigPlugin];
-      
+      final val PLUGIN = "no.polaric.webconfig"
       
  
       protected def refreshPage(resp: Response, t: Int, url: String) = 
@@ -94,7 +93,7 @@ package no.polaric.webconfig
        */
       protected def _getField(req : Request, value: String, propname: String, pattern: String, 
           isnum: Boolean, min: Int, max: Int): NodeSeq = 
-      {
+      {          
           val xold = _api.getProperty(propname,"")
           var x = value;
           
@@ -154,8 +153,11 @@ package no.polaric.webconfig
        */
       def handle_restartServer(req : Request, res: Response) =
       {
-          // val head = 
-          refreshPage(res, 10, "config_menu")
+          val I = getI18n(req, PLUGIN)
+          var lang = req.getParameter("lang")
+          lang = if (lang==null) "en" else lang
+         
+         refreshPage(res, 10, "config_menu?lang="+lang)
           
           def action(req : Request): NodeSeq = {
 
@@ -164,7 +166,7 @@ package no.polaric.webconfig
              pb.start(); 
              
              <br/>
-             <h2>Restart server...</h2>
+             <h2>{ I.tr("Restart server...") }</h2>
           }
              
           printHtml (res, htmlBody (req, null, IF_ADMIN(action)(req) ))
@@ -179,11 +181,14 @@ package no.polaric.webconfig
        */
       override def htmlBody(req: Request, xhead : NodeSeq, content : NodeSeq) : Node =
       {
+           val I = getI18n(req, PLUGIN)
            val head = <link href={fprefix(req)+"/config_menu.css"} rel="stylesheet" type="text/css" />
            val heads = if (xhead==null) head else head ++ xhead 
            
            var selected = req.getParameter("mid")           
            selected = if (selected==null) "1" else selected
+           var lang = req.getParameter("lang")
+           lang = if (lang==null) "en" else lang
            
            
            def mitem(url:String, id: Integer, txt: String) : Node = 
@@ -192,7 +197,7 @@ package no.polaric.webconfig
               val cls = if ((""+id).equals(selected)) "selected" else ""
               
               <li class={cls}>
-                <a href={ url + delim + "mid="+id }>{txt}</a>
+                <a href={ url + delim + "lang="+lang+"&mid="+id }>{txt}</a>
               </li>
            }
            
@@ -201,12 +206,12 @@ package no.polaric.webconfig
            def body = 
              <div id="config_menu">
              <ul class="menu">
-               { mitem("config_menu", 1, "Status info") ++
-                 mitem("config", 2, "Server konfig") ++
-                 mitem("config_posreport", 3, "Egen posisjon") ++
-                 mitem("config_mapdisplay", 4, "Visning på kart")
+               { mitem("config_menu", 1, I.tr("Status info")) ++
+                 mitem("config", 2, I.tr("Server config")) ++
+                 mitem("config_posreport", 3, I.tr("Own position")) ++
+                 mitem("config_mapdisplay", 4, I.tr("Display on map"))
                }
-               <li>Datakanaler...</li>
+               <li>{ I.tr("Data channels...") }</li>
                <ul>
                {
                   val chs = _api.getProperty("channels", null).split(",(\\s)*")
@@ -219,11 +224,11 @@ package no.polaric.webconfig
                </ul>
              </ul>
              <br/>
-             <a id="restart" href="restartServer"><b>[RESTART]</b></a>
+             <a id="restart" href={"restartServer?lang="+lang} ><b>[RESTART]</b></a>
              {
                 if (changed)
                    <div class="status">
-                      Endringer er gjort. Restart for å aktivere.
+                      { I.tr("Changes are done. Restart to activate.") }
                    </div>
                 else null
              }
@@ -244,8 +249,11 @@ package no.polaric.webconfig
        */
       def handle_config_menu(req : Request, res: Response) =
       {
+          var lang = req.getParameter("lang")
+          lang = if (lang==null) "en" else lang
+          
           def action(req : Request): NodeSeq =
-             <iframe id="config_main" name="config_main" src="admin?cmd=info"/>
+             <iframe id="config_main" name="config_main" src={"admin?cmd=info&lang="+lang} />
              ;   
                           
           printHtml (res, htmlBody(req, null, action(req)))
@@ -259,31 +267,63 @@ package no.polaric.webconfig
       def handle_config(req : Request, res: Response) =
       { 
           val prefix = <h3>Konfigurasjon av Polaric APRSD</h3>
+          val I = getI18n(req, PLUGIN)
           
           def fields(req : Request): NodeSeq =
-                textField("default.mycall", "item1", "Kallesignal:", "", 10, 10, CALLSIGN) ++
-                textField("user.admin", "item2", "Admin brukere:", "Fulle admin-rettigheter", 30, 200, TEXT, "(regex)") ++  
-                textField("user.update", "item3", "SAR brukere:", "Vanlige SAR brukere", 30, 200, TEXT, "(regex)") ++
+                textField("default.mycall", "item1", 
+                      I.tr("Callsign")+":", "", 10, 10, CALLSIGN) ++
+                textField("user.admin", "item2", 
+                      I.tr("Admin users")+":", 
+                      I.tr("Full admin-rights"), 30, 200, TEXT, "(regex)") ++  
+                textField("user.update", "item3", 
+                      I.tr("SAR users")+":", 
+                      I.tr("Ordinary SAR users"), 30, 200, TEXT, "(regex)") ++
                 br ++
-                textField("channels", "item4", "Datakanaler:", "Datakanaler for sporing", 30, 50, LIST, "(liste)")   ++
-                textField("channel.default.inet", "item5", "Primær APRS/IS kanal:", "", 10, 10, NAME) ++ 
-                textField("channel.default.rf", "item6", "Primær RF kanal:", "", 10, 10, NAME) ++ 
+                textField("channels", "item4", 
+                      I.tr("Data channels")+":", 
+                      I.tr("Data channels for tracking"), 30, 50, LIST, "(liste)")   ++
+                textField("channel.default.inet", "item5", 
+                      I.tr("Primary APRS/IS channel")+":", "", 10, 10, NAME) ++ 
+                textField("channel.default.rf", "item6", 
+                      I.tr("Primary RF channel")+":", "", 10, 10, NAME) ++ 
                 br ++
-                label("item7", "leftlab", "Igate:", "Kryss av for å aktivere RF<->internett gateway") ++
-                boolField("igate.on", "item7", "Aktivert.") ++ br ++ 
-                label("item8", "leftlab", "Igating til RF:", "Kryss av for å aktivere internet->RF igating") ++
-                boolField("igate.rfgate.allow", "item8", "Aktivert.") ++
-                boolField("objects.rfgate.allow", "item9", "RF igating for objekter.") ++ br ++
-                textField("objects.rfgate.range", "item10", "Radius objekter:", "Område for utsending av objekter på RF", 6, 10, NUMBER, "(km)") ++
-                textField("igate.rfgate.path", "item11", "Digipeater sti, igate:", "Default (se også neste felt)", 20, 30, LIST) ++
-                textField("message.rfpath", "item12", "Digipeater sti, meldinger:", "...gjelder også meldinger til RF igate", 20, 30, LIST) ++
-                textField("objects.rfpath", "item13", "Digipeater sti, objekter: ", "...gjelder også objekter til RF igate", 20, 30, LIST) ++
+                label("item7", "leftlab", 
+                      I.tr("Igate")+":", 
+                      I.tr("Tick to activate RF<->internet gateway")) ++
+                boolField("igate.on", "item7", 
+                      I.tr("Activated.")) ++ br ++ 
+                label("item8", "leftlab", 
+                      I.tr("Igating to RF")+":", 
+                      I.tr("Tick to activate internet->RF igating")) ++
+                boolField("igate.rfgate.allow", "item8", 
+                      I.tr("Activated.")) ++
+                boolField("objects.rfgate.allow", "item9", 
+                      I.tr("RF igating for objects.")) ++ br ++
+                textField("objects.rfgate.range", "item10", 
+                      I.tr("Radius objects")+":", 
+                      I.tr("Area for sending of objects RF"), 6, 10, NUMBER, "(km)") ++
+                textField("igate.rfgate.path", "item11", 
+                      I.tr("Digipeater path, igate")+":", 
+                      I.tr("Default (see also next field)"), 20, 30, LIST) ++
+                textField("message.rfpath", "item12", 
+                      I.tr("Digi path, messages")+":", 
+                      I.tr("...has also effect for messages to RF igate"), 20, 30, LIST) ++
+                textField("objects.rfpath", "item13", 
+                      I.tr("Digipeater path, objects")+":", 
+                      I.tr("...has also effect for objects to RF igate"), 20, 30, LIST) ++
                 br ++ 
-                label("item14", "leftlab", "Fjernkontroll:", "Kryss av for å aktivere fjernkontroll") ++
-                boolField("remotectl.on", "item14", "Aktivert.") ++
+                label("item14", "leftlab", 
+                      I.tr("Remote control")+":", 
+                      I.tr("Tick to activate remote control")) ++
+                boolField("remotectl.on", "item14", 
+                      I.tr("Activated.")) ++
                 br ++
-                textField("remotectl.connect", "item15", "Fk server:", "Fk server (kallesignal)", 10, 10, NAME) ++
-                textField("message.auth.key", "item16", "Autentiseringsnøkkel:", "Nøkkel for autentisering (for fjernkontroll)", 20, 30, TEXT)
+                textField("remotectl.connect", "item15", 
+                      I.tr("Rc server")+":", 
+                      I.tr("Rc server (callsign of another PS instance)"), 10, 10, NAME) ++
+                textField("message.auth.key", "item16", 
+                      I.tr("Authentication key")+":", 
+                      I.tr("Key for authentication (for remote control)"), 20, 30, TEXT)
                ;
               
               
@@ -317,17 +357,32 @@ package no.polaric.webconfig
        * Parameters related to showing tracks on map. 
        */
       def handle_config_mapdisplay(req : Request, res: Response) =
-      { 
-          val prefix = <h3>Kartvisnings innstillinger</h3>
+      {          
+          val I = getI18n(req, PLUGIN)
+          val prefix = <h3>{ I.tr("Map display settings") }</h3>
           
           def fields(req : Request): NodeSeq =
-                textField("aprs.expiretime", "item1", "Maks inaktivitet:", "Hvor lenge kan objekt være inaktivt før det forsvinner", 4, 4, NUMBER, "(minutter)") ++
+                textField("aprs.expiretime", "item1", 
+                     I.tr("Max inactivity")+":", 
+                     I.tr("How long can an object be inactive before it disappears"), 
+                     4, 4, NUMBER, I.tr("(minutes)")) ++
                 br ++
-                textField("map.trail.maxPause", "item2", "Maks inaktivitet for spor:", "Hvor lenge kan objekt være inaktivt før spor forsvinner", 4, 4, NUMBER, "(minutter)") ++
-                textField("map.trail.maxPause.extended", "item3", ".. sakte fart:", "Maks inaktivitetstid når fart er lav", 4, 4, NUMBER, "(minutter)") ++          
+                textField("map.trail.maxPause", "item2", 
+                     I.tr("Max inactivity for trail")+":", 
+                     I.tr("How long can an object be inactive before its trail disappears"), 
+                     4, 4, NUMBER, I.tr("(minutes)")) ++
+                textField("map.trail.maxPause.extended", "item3", 
+                     I.tr(".. slow speed")+":", 
+                     I.tr("Max inactivity time when speed is low"), 4, 4, NUMBER, I.tr("(minutes)")) ++          
                 br ++
-                textField("map.trail.maxAge", "item4", "Sporlengde:", "Hvor langt tidsrom skal et spor tegnes for", 4, 4, NUMBER, "(minutter)") ++
-                textField("map.trail.maxAge.extended", "item5", ".. sakte fart:", "Sporlengde når fart er lav", 4, 4, NUMBER, "(minutter)") 
+                textField("map.trail.maxAge", "item4", 
+                     I.tr("Trail length")+":", 
+                     I.tr("How long timespan to draw a trail for"), 
+                     4, 4, NUMBER, I.tr("(minutes)")) ++
+                textField("map.trail.maxAge.extended", "item5", 
+                     I.tr(".. slow speed")+":", 
+                     I.tr("Trail length when speed is low"), 
+                     4, 4, NUMBER, I.tr("(minutes)")) 
          ;
               
               
@@ -352,33 +407,57 @@ package no.polaric.webconfig
        * Using the Polaric APRSD as a tracker that send position reports. 
        */
       def handle_config_posreport(req : Request, res: Response) =
-      { 
-          val prefix = <h3>Sporing av egen posisjon</h3>
-          
+      {   
+          val I = getI18n(req, PLUGIN)
+          val prefix = <h3>{ I.tr("Tracking of own position") }</h3>
           
           def fields(req : Request): NodeSeq =
-                label("item1", "leftlab", "Posisjonsrapport:", "Kryss av for å aktivere posisjonsrapportering") ++
-                boolField("ownposition.tx.on", "item1", "Aktivert.") ++  
-                boolField("ownposition.tx.allowrf", "item2", "Tillat sending på RF.") ++
+                label("item1", "leftlab", 
+                      I.tr("Position report")+":", 
+                      I.tr("Tick to activate position reporting")) ++
+                boolField("ownposition.tx.on", "item1", 
+                      I.tr("Activated")) ++  
+                boolField("ownposition.tx.allowrf", "item2", 
+                      I.tr("Allow transmission on RF")) ++
                 br ++ br ++
-                label("item4", "leftlab", "Symbol:", "APRS symboltabell og symbol") ++
+                label("item4", "leftlab", 
+                      I.tr("Symbol")+":", 
+                      I.tr("APRS symbol-table and symbol")) ++
                 textInput("item4", 1, 1, ".", ""+_api.getProperty("ownposition.symbol", "/c")(0)) ++
                 textInput("item5", 1, 1, ".", ""+_api.getProperty("ownposition.symbol", "/c")(1)) ++
                 br ++
-                textField("ownposition.tx.rfpath", "item6", "Digipeater sti:", "", 20, 30, LIST) ++
-                textField("ownposition.tx.comment", "item7", "Beskrivelse:", "", 20, 40, TEXT) ++ br ++
-                label("utmz", "leftlab", "Min posisjon:", "Serverens posisjon i UTM format") ++        
+                textField("ownposition.tx.rfpath", "item6", 
+                      I.tr("Digipeater path")+":", "", 20, 30, LIST) ++
+                textField("ownposition.tx.comment", "item7", 
+                      I.tr("Description")+":", "", 20, 40, TEXT) ++ br ++
+                label("utmz", "leftlab", 
+                      I.tr("My position")+":", 
+                      I.tr("Server's position in UTM format")) ++        
                 utmField("ownposition.pos") ++ br ++ 
                 br ++
-                label("item8", "leftlab", "Tracking med GPS:", "Kryss av for å bruke posisjon fra GPS") ++
-                boolField("ownposition.gps.on", "item8", "Aktivert.") ++ 
-                boolField("ownposition.gps.adjustclock", "item9", "Juster klokke fra GPS.") ++ br ++
-                textField("ownposition.gps.port", "item10", "GPS Port:", "Serieport enhetsnavn (f.eks. /dev/ttyS0)", 12, 20, NAME) ++
-                textField("ownposition.gps.baud", "item11", "GPS Baud:", "", 6, 8, NUMBER) ++ br ++
-                textField("ownposition.minpause", "item12", "Min pause:", "Minimum tid mellom sendinger", 4, 5, NUMBER, "(sekunder)") ++
-                textField("ownposition.maxpause", "item13", "Maks pause:", "Maksimum tid mellom sendinger", 4, 5, NUMBER, "(sekunder)") ++
-                textField("ownposition.mindist", "item14", "Min distanse:", "Distanse mellom sendinger når fart er lav", 4, 5, NUMBER, "(meter)") ++
-                textField("ownposition.maxturn", "item15", "Maks turn:", "Maks endring i retning før sending", 4, 5, NUMBER, "(grader)")
+                label("item8", "leftlab", I.tr("Tracking with GPS")+":", 
+                      I.tr("Tick to use position from GPS")) ++
+                boolField("ownposition.gps.on", "item8", 
+                      I.tr("Activated")) ++ 
+                boolField("ownposition.gps.adjustclock", "item9", 
+                      I.tr("Adjust clock from GPS")) ++ br ++
+                textField("ownposition.gps.port", "item10", 
+                      I.tr("GPS Port")+":", 
+                      I.tr("Serial port device-name (e.g. /dev/ttyS0)"), 12, 20, NAME) ++
+                textField("ownposition.gps.baud", "item11", 
+                      I.tr("GPS Baud")+":", "", 6, 8, NUMBER) ++ br ++
+                textField("ownposition.minpause", "item12", 
+                      I.tr("Min pause")+":", 
+                      I.tr("Minimum time between transmissions"), 4, 5, NUMBER, I.tr("(seconds)")) ++
+                textField("ownposition.maxpause", "item13", 
+                      I.tr("Max pause")+":", 
+                      I.tr("Maximum time between transmissions"), 4, 5, NUMBER, I.tr("(seconds)")) ++
+                textField("ownposition.mindist", "item14", 
+                      I.tr("Min distance")+":", 
+                      I.tr("Distance between transmissions when speed is low"), 4, 5, NUMBER, I.tr("(meter)")) ++
+                textField("ownposition.maxturn", "item15", 
+                      I.tr("Max turn")+":", 
+                      I.tr("Max change in direction before transmission"), 4, 5, NUMBER, I.tr("(degrees)"))
               ;
               
               
@@ -412,6 +491,7 @@ package no.polaric.webconfig
       */
      def handle_config_chan(req: Request, res: Response) = 
      {
+         val I = getI18n(req, PLUGIN)
          val cid = req.getParameter("chan")
          val chp = "channel."+cid
          val prefix = <h3>Kanal '{cid}'</h3>
@@ -426,30 +506,45 @@ package no.polaric.webconfig
                if (ch != null) 
                    refreshPage(res, 60, "config_chan?chan="+cid);
                { if (ch != null) 
-                    simpleLabel("info1", "leftlab", "Hørte stasjoner:", TXT(""+ch.nHeard())) ++
-                    simpleLabel("info2", "leftlab", "Trafikk inn:", TXT(""+ch.nHeardPackets()+"  ("+ch.nDuplicates()+" duplikater)")) ++
-                    simpleLabel("info3", "leftlab", "Trafikk ut:", TXT(""+ch.nSentPackets())) ++ br
+                    simpleLabel("info1", "leftlab", I.tr("Heard stations")+":", TXT(""+ch.nHeard())) ++
+                    simpleLabel("info2", "leftlab", I.tr("Traffic in")+":", TXT(""+ch.nHeardPackets()+"  ("+ch.nDuplicates()+" duplikater)")) ++
+                    simpleLabel("info3", "leftlab", I.tr("Traffic out")+":", TXT(""+ch.nSentPackets())) ++ br
                  else <span></span>
                } ++
-               label("item1", "leftlab", "Kanal:", "Kryss av for å aktivere kanal") ++
-               boolField(chp+".on", "item1", "Aktivert") ++ br ++
-               textField(chp+".type", "item2", "Type:", "Type (APRSIS, TNC2, KISS eller TCPKISS)", 10, 10, CHANTYPE) ++
+               label("item1", "leftlab", I.tr("Channel")+":", I.tr("Tick to activate channel")) ++
+               boolField(chp+".on", "item1", I.tr("Activated")) ++ br ++
+               textField(chp+".type", "item2", 
+                     I.tr("Type")+":", 
+                     I.tr("Type (APRSIS, TNC2, KISS or TCPKISS)"), 10, 10, CHANTYPE) ++
                { 
                  if (is_aprsis || is_tcpkiss) 
-                    textField(chp+".host", "item4", "Server adresse:", "DNS navn eller IP adresse for server", 20, 30, NAME) ++
-                    textField(chp+".port", "item5", "Server port:", "Portnr", 6, 6, NUMBER) ++
+                    textField(chp+".host", "item4", 
+                          I.tr("Server address")+":", 
+                          I.tr("DNS name or IP address for server"), 20, 30, NAME) ++
+                    textField(chp+".port", "item5", 
+                          I.tr("Server port")+":", 
+                          I.tr("Port number"), 6, 6, NUMBER) ++
                     { if (is_aprsis)
-                        textField(chp+".pass", "item6", "Passkode:", "APRS/IS verifikasjonskode", 6, 6, NUMBER) ++
-                        textField(chp+".filter", "item7", "Filter:", "APRS/IS filter-streng", 30, 50, TEXT) 
+                        textField(chp+".pass", "item6", 
+                              I.tr("Passcode")+":", 
+                              I.tr("APRS/IS verification code"), 6, 6, NUMBER) ++
+                        textField(chp+".filter", "item7", 
+                              I.tr("Filter")+":", 
+                              I.tr("APRS/IS filter-string"), 30, 50, TEXT) 
                       else <span></span> 
                     } 
                  else 
-                    textField(chp+".port", "item8", "Port:", "Serieport enhetsnavn (f.eks. /dev/ttyS0)", 12, 20, NAME) ++
-                    textField(chp+".baud", "item9", "Baud:", "", 6, 8, NUMBER) 
+                    textField(chp+".port", "item8", 
+                          I.tr("Port")+":", 
+                          I.tr("Serial port device-name (e.g. /dev/ttyS0)"), 12, 20, NAME) ++
+                    textField(chp+".baud", "item9", 
+                          I.tr("Baud")+":", "", 6, 8, NUMBER) 
                } ++ br ++
-               label("item10", "leftlab", "Synlighet:", "Kryss av for å begrense innsyn til innloggede brukere") ++
-               boolField(chp+".restrict", "item10", "Bare for innloggede brukere") ++ br ++
-               textField(chp+".style", "item11", "CSS stilnavn:", "", 10, 10, NAME)
+               label("item10", "leftlab", 
+                     I.tr("Visibility")+":", 
+                     I.tr("Tick to limit access to logged in users")) ++
+               boolField(chp+".restrict", "item10", I.tr("Only for logged in users")) ++ br ++
+               textField(chp+".style", "item11", I.tr("CSS style name")+":", "", 10, 10, NAME)
          }
          
          
@@ -486,20 +581,21 @@ package no.polaric.webconfig
       */
       def handle_passwd(req: Request, res: Response) = 
       {
-          val prefix = <h3>Registrer bruker/passord</h3>
+          val I = getI18n(req, PLUGIN)
+          val prefix = <h3>{ I.tr("Register user/password") }</h3>
           var username = getAuthUser(req)
           
           
           
           def fields(req : Request): NodeSeq =
-             label("item1", "lleftlab", "Brukernavn:", "Brukernavn for ny eller eksisterende bruker") ++
+             label("item1", "lleftlab", I.tr("Username")+":", I.tr("Username for new or existing user")) ++
              { if (authorizedForAdmin(req))
                   textInput("item1", 20, 20, NAME, "")
                else 
                   <label id="item1">{username}</label>
              } ++
              br ++
-             label("item2", "lleftlab", "Passord:", "") ++
+             label("item2", "lleftlab", I.tr("Password")+":", "") ++
              textInput("item2", 20, 30, ".*", "")
           ;
           
@@ -515,13 +611,13 @@ package no.polaric.webconfig
              val res = p.waitFor()
              
              if (res == 0)
-                 <h3>Passord for bruker '{username}' oppdatert</h3>
+                 <h3>{ I.tr("Password for user '{0}' updated", username) }</h3>
              else if (res == 5)
-                 <h3>Feil: Oppgitt verdi er for lang</h3>
+                 <h3>{ I.tr("Error: Your input is too long") }</h3>
              else if (res == 6)
-                 <h3>Feil: Oppgitt verdi inneholder ulovlige tegn</h3>
+                 <h3>{ I.tr("Error: Your input contains illegal characters") }</h3>
              else 
-                 <h3>Feil: Kunne ikke oppdatere (server problem)</h3>
+                 <h3>{ I.tr("Error: Couldn't update (server problem)") }</h3>
        
           }
  
