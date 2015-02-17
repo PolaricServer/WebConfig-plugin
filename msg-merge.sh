@@ -10,3 +10,9 @@ do
   echo "Merging template file into $lang"
   msgmerge -i -F --no-wrap -o src/i18n/msgs/${lang}.po src/i18n/msgs/${lang}.po src/i18n/msgs/messages.pot
 done
+
+for lang in $*
+do
+  echo "Merging template file into $lang"
+  msgmerge -i -F --no-wrap -o www/i18n/msgs/${lang}.po www/i18n/msgs/${lang}.po www/i18n/msgs/messages.pot
+done

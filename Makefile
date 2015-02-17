@@ -50,12 +50,16 @@ install: polaric-aprsd.jar
 	install -d $(INSTALL_JAR)
 	install -d $(INSTALL_WWW)
 	install -d $(INSTALL_WEBAPP)
+	install -d $(INSTALL_WEBAPP)/webconfig
+	install -d $(INSTALL_WEBAPP)/webconfig/i18n
 	install -d $(INSTALL_SUDO)
 	install -m 644 webconfig.ini $(INSTALL_PLUGDIR)
 	install -m 644 www/webconfig.js $(INSTALL_WEBAPP)
+	install -m 644 www/i18n/msgs/*.json $(INSTALL_WEBAPP)/webconfig/i18n/
 	install -m 644 www/config_menu.css $(INSTALL_WWW)
 	install -m 644 www/PolaricServer.png $(INSTALL_WWW)
 	install -m 644 www/pointer.gif $(INSTALL_WWW)
+	
 	install -m 755 -d $(INSTALL_LOG)
 	install -m 644 polaric-webconfig.jar $(INSTALL_JAR)
 	cp sudoers.d $(INSTALL_SUDO)/polaric-plugin-webconfig
@@ -89,7 +93,9 @@ core:
 .PHONY : i18n
 i18n: 
 	bash msg-compile.sh $(LANGUAGES)
-
+        # Repeat p2json for each po file to be used
+	python po2json.py www/i18n/msgs/no.po
+	
 	
 .PHONY : scala
 scala:            

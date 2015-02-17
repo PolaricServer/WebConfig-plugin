@@ -507,7 +507,8 @@ package no.polaric.webconfig
                    refreshPage(res, 60, "config_chan?chan="+cid);
                { if (ch != null) 
                     simpleLabel("info1", "leftlab", I.tr("Heard stations")+":", TXT(""+ch.nHeard())) ++
-                    simpleLabel("info2", "leftlab", I.tr("Traffic in")+":", TXT(""+ch.nHeardPackets()+"  ("+ch.nDuplicates()+" duplikater)")) ++
+                    simpleLabel("info2", "leftlab", 
+                       I.tr("Traffic in")+":", TXT(""+ch.nHeardPackets()+"  ("+ch.nDuplicates()+" "+I.tr("duplicates")+")")) ++
                     simpleLabel("info3", "leftlab", I.tr("Traffic out")+":", TXT(""+ch.nSentPackets())) ++ br
                  else <span></span>
                } ++
