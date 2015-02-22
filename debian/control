@@ -8,7 +8,7 @@ Homepage: http://aprs.no/dokuwiki
 
 Package: polaric-webconfig-plugin
 Architecture: all
-Depends: polaric-aprsd (>= 1.5), polaric-webapp (>= 1.5), sudo, ${misc:Depends}
+Depends: polaric-aprsd (>= 1.7), polaric-webapp (>= 1.7), sudo, ${misc:Depends}
 Recommends: 
 Description: Polaric Server: APRS daemon part. 
  The "Polaric Server" which is mainly a web based service to present APRS 
