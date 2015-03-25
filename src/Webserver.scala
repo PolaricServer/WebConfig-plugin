@@ -69,7 +69,17 @@ package no.polaric.webconfig
              utmForm(_api.getProperty(propname, null))
           ;
          
-          
+      
+      protected def printState(st: Channel.State, I:I18n): NodeSeq = 
+         st match {
+            case Channel.State.OFF => TXT( I.tr("Inactive (off)"))
+            case Channel.State.STARTING => TXT( I.tr("Connecting..."))
+            case Channel.State.RUNNING => 
+                <span>{ I.tr("Active (ok)") }<img class="state" src="/images/ok.png"/></span>  
+            case Channel.State.FAILED => 
+                <span>{ I.tr("Inactive (failed)") }<img class="state" src="/images/edit-delete.png"/></span>
+         }
+         ;
           
           
           
@@ -494,7 +504,7 @@ package no.polaric.webconfig
          val I = getI18n(req, PLUGIN)
          val cid = req.getParameter("chan")
          val chp = "channel."+cid
-         val prefix = <h3>Kanal '{cid}'</h3>
+         val prefix = <h3>{I.tr("Channel")+ " '"+cid+"'"}</h3>
 
          val is_aprsis = _api.getProperty(chp+".type", "APRSIS").equals("APRSIS")
          val is_tcpkiss = _api.getProperty(chp+".type", "APRSIS").equals("TCPKISS")
@@ -506,10 +516,12 @@ package no.polaric.webconfig
                if (ch != null) 
                    refreshPage(res, 60, "config_chan?chan="+cid);
                { if (ch != null) 
+                    simpleLabel("info4", "leftlab", I.tr("State")+":", printState(ch.getState(), I)) ++ 
                     simpleLabel("info1", "leftlab", I.tr("Heard stations")+":", TXT(""+ch.nHeard())) ++
                     simpleLabel("info2", "leftlab", 
                        I.tr("Traffic in")+":", TXT(""+ch.nHeardPackets()+"  ("+ch.nDuplicates()+" "+I.tr("duplicates")+")")) ++
-                    simpleLabel("info3", "leftlab", I.tr("Traffic out")+":", TXT(""+ch.nSentPackets())) ++ br
+                    simpleLabel("info3", "leftlab", I.tr("Traffic out")+":", TXT(""+ch.nSentPackets())) ++ br 
+                    
                  else <span></span>
                } ++
                label("item1", "leftlab", I.tr("Channel")+":", I.tr("Tick to activate channel")) ++
