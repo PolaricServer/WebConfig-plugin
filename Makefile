@@ -24,6 +24,7 @@ INSTALLDIR = /etc/polaric-aprsd/plugins
    INSTALL_WWW = $(DESTDIR)/usr/share/polaric
 INSTALL_WEBAPP = $(DESTDIR)/etc/polaric-webapp/www/auto
    INSTALL_BIN = $(DESTDIR)/usr/bin
+   INSTALL_IMG = $(DESTDIR)/usr/share/polaric/dicons
 INSTALL_CONFIG = $(DESTDIR)/etc/polaric-aprsd
    INSTALL_LOG = $(DESTDIR)/var/log/polaric
   INSTALL_SUDO = $(DESTDIR)/etc/sudoers.d
@@ -47,6 +48,7 @@ install: polaric-aprsd.jar
 	install -d $(INSTALL_CONFIG)
 	install -d $(INSTALL_PLUGDIR)
 	install -d $(INSTALL_BIN)
+	install -d $(INSTALL_IMG)
 	install -d $(INSTALL_JAR)
 	install -d $(INSTALL_WWW)
 	install -d $(INSTALL_WEBAPP)
@@ -59,6 +61,7 @@ install: polaric-aprsd.jar
 	install -m 644 www/config_menu.css $(INSTALL_WWW)
 	install -m 644 www/PolaricServer.png $(INSTALL_WWW)
 	install -m 644 www/pointer.gif $(INSTALL_WWW)
+	install -m 644 images/*.png $(INSTALL_IMG)
 	
 	install -m 755 -d $(INSTALL_LOG)
 	install -m 644 polaric-webconfig.jar $(INSTALL_JAR)

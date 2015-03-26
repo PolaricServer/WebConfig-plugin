@@ -23,9 +23,18 @@ package no.polaric.webconfig
       final val PLUGIN = "no.polaric.webconfig"
       
  
-      protected def refreshPage(resp: Response, t: Int, url: String) = 
-        resp.addValue("Refresh", t+";url=\""+url+"\"")
-        ;
+      protected def refreshPage(req: Request, resp: Response, t: Int, url: String) = 
+      {
+         val mid = req.getParameter("mid");
+         val cid = req.getParameter("chan");
+         var lang = req.getParameter("lang");
+         lang = if (lang==null) "en" else lang
+         val uparm = "?lang=" + lang + 
+           { if (mid != null) "&mid="+mid else "" } + 
+           { if (cid != null) "&chan="+cid else "" }
+            
+         resp.addValue("Refresh", t+";url=\""+url + uparm+"\"")
+      }
       
           
           
@@ -75,9 +84,9 @@ package no.polaric.webconfig
             case Channel.State.OFF => TXT( I.tr("Inactive (off)"))
             case Channel.State.STARTING => TXT( I.tr("Connecting..."))
             case Channel.State.RUNNING => 
-                <span>{ I.tr("Active (ok)") }<img class="state" src="/images/ok.png"/></span>  
+                <span>{ I.tr("Active (ok)") }<img class="state" src="../aprsd/dicons/ok.png"/></span>  
             case Channel.State.FAILED => 
-                <span>{ I.tr("Inactive (failed)") }<img class="state" src="/images/edit-delete.png"/></span>
+                <span>{ I.tr("Inactive (failed)") }<img class="state" src="../aprsd/dicons/fail.png"/></span>
          }
          ;
           
@@ -164,10 +173,7 @@ package no.polaric.webconfig
       def handle_restartServer(req : Request, res: Response) =
       {
           val I = getI18n(req, PLUGIN)
-          var lang = req.getParameter("lang")
-          lang = if (lang==null) "en" else lang
-         
-         refreshPage(res, 10, "config_menu?lang="+lang)
+          refreshPage(req, res, 10, "config_menu")
           
           def action(req : Request): NodeSeq = {
 
@@ -339,7 +345,7 @@ package no.polaric.webconfig
               
          def action(req : Request): NodeSeq = 
          {
-               refreshPage(res, 3, "config?mid=2")
+               refreshPage(req, res, 3, "config")
                br ++ br ++
                getField(req, "item1", "default.mycall", CALLSIGN) ++ 
                getField(req, "item2", "user.admin", TEXT) ++ 
@@ -398,7 +404,7 @@ package no.polaric.webconfig
               
           def action(req : Request): NodeSeq = 
           {
-               refreshPage(res, 3, "config_mapdisplay?mid=4")
+               refreshPage(req, res, 3, "config_mapdisplay")
                br ++ br ++
                getField(req, "item1", "aprs.expiretime", 0, 1440) ++ 
                getField(req, "item2", "map.trail.maxPause", 0, 1440) ++
@@ -473,7 +479,7 @@ package no.polaric.webconfig
               
          def action(req : Request): NodeSeq = 
          {       
-              refreshPage(res, 3, "config_posreport?mid=3")
+              refreshPage(req, res, 3, "config_posreport")
               br ++ br ++
               getField(req, "item1", "ownposition.tx.on", BOOLEAN) ++
               getField(req, "item2", "ownposition.tx.allowrf", BOOLEAN) ++
@@ -514,7 +520,7 @@ package no.polaric.webconfig
          def fields(req : Request): NodeSeq = 
          {      
                if (ch != null) 
-                   refreshPage(res, 60, "config_chan?chan="+cid);
+                   refreshPage(req, res, 60, "config_chan");
                { if (ch != null) 
                     simpleLabel("info4", "leftlab", I.tr("State")+":", printState(ch.getState(), I)) ++ 
                     simpleLabel("info1", "leftlab", I.tr("Heard stations")+":", TXT(""+ch.nHeard())) ++
@@ -564,7 +570,7 @@ package no.polaric.webconfig
          
          def action(req : Request): NodeSeq = 
          {
-              refreshPage(res, 3, "config_chan?mid="+4+cid+"&"+"chan="+cid)
+              refreshPage(req, res, 3, "config_chan")
               br ++ br ++
               getField(req, "item1", chp+".on", BOOLEAN) ++
               getField(req, "item2", chp+".type", CHANTYPE) ++
