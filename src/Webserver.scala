@@ -570,6 +570,11 @@ package no.polaric.webconfig
          
          def action(req : Request): NodeSeq = 
          {
+              val wasOn = _api.getBoolProperty(chp+".on", false)
+              val chan = _api.getChanManager().get(cid)
+              val wasChg = changed 
+              changed = false
+              
               refreshPage(req, res, 3, "config_chan")
               br ++ br ++
               getField(req, "item1", chp+".on", BOOLEAN) ++
@@ -587,7 +592,26 @@ package no.polaric.webconfig
                    getField(req, "item9", chp+".baud", 300, 999999)
               } ++
               getField(req, "item10", chp+".restrict", BOOLEAN) ++
-              getField(req, "item11", chp+".style", NAME) 
+              getField(req, "item11", chp+".style", NAME) ++ 
+              {
+                  if (changed && wasOn) {
+                      chan.deActivate();
+                      <span class="fieldsuccess">Deactivating channel<br/></span>
+                  }
+                  else <span></span>
+              } ++
+              {  
+                  val isOn = _api.getBoolProperty(chp+".on", false)
+                  if (changed && isOn) {
+                      chan.activate(_api);
+                      <span class="fieldsuccess">Activating channel<br/></span>
+                  }
+                  else <span></span>
+              } ++
+              {
+                  changed = wasChg
+                  <span></span>
+              }
          }
               
          printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, default_submit)))     
