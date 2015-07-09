@@ -37,6 +37,18 @@ package no.polaric.webconfig
       }
       
           
+            
+      protected def typeField(propname: String, id: String, lbl: String, title: String) : NodeSeq = 
+      {
+         val pval = _api.getProperty(propname, "")
+         label(id, "leftlab", lbl, title) ++
+         <select name={id} id={id}> 
+            { for (x <- Array("APRSIS", "KISS", "TCPKISS", "TNC2")) yield
+                 <option value={x} selected={if (x.equals(pval)) "selected" else null}>{x}</option>
+            }
+         </select><br/>
+       }           
+          
           
       /** Text field with label */
       protected def textField(propname: String, id: String, lbl: String, title: String, 
@@ -134,7 +146,7 @@ package no.polaric.webconfig
                if (!x.equals(xold)) {
                    changed = true
                    _api.getConfig().setProperty(propname, x)
-                    <span class="fieldsuccess">Field <b>{propname}</b> = '{x}'. Changed.<br/></span>
+                    <span class="fieldsuccess">Field <b>{propname}</b> = '{x}'. Changed. <br/> </span>
                }               
                else <span>Field <b>{propname}</b>. Unchanged.<br/></span>          
           else if (x != null && !"".equals(x))
@@ -240,7 +252,8 @@ package no.polaric.webconfig
                </ul>
              </ul>
              <br/>
-             <a id="restart" href={"restartServer?lang="+lang} ><b>[RESTART]</b></a>
+             <button id="restart" onclick={"location.href='restartServer?lang="+lang+"'"} >RESTART</button>
+
              {
                 if (changed)
                    <div class="status">
@@ -514,6 +527,7 @@ package no.polaric.webconfig
 
          val is_aprsis = _api.getProperty(chp+".type", "APRSIS").equals("APRSIS")
          val is_tcpkiss = _api.getProperty(chp+".type", "APRSIS").equals("TCPKISS")
+         val is_backup = _api.getChanManager().isBackup(cid);
          val ch = _api.getChanManager().get(cid)
 
          
@@ -530,13 +544,22 @@ package no.polaric.webconfig
                     
                  else <span></span>
                } ++
-               label("item1", "leftlab", I.tr("Channel")+":", I.tr("Tick to activate channel")) ++
-               boolField(chp+".on", "item1", I.tr("Activated")) ++ br ++
-               textField(chp+".type", "item2", 
+               { if (!is_backup) 
+                   label("item1", "leftlab", I.tr("Channel")+":", I.tr("Tick to activate channel")) ++
+                   boolField(chp+".on", "item1", I.tr("Activated")) ++ br  
+                 else <span></span> 
+               } ++ 
+               typeField(chp+".type", "item2", 
                      I.tr("Type")+":", 
-                     I.tr("Type (APRSIS, TNC2, KISS or TCPKISS)"), 10, 10, CHANTYPE) ++
+                     I.tr("Type (APRSIS, TNC2, KISS or TCPKISS)")) ++
                { 
                  if (is_aprsis || is_tcpkiss) 
+                    { if (!is_backup)
+                         textField(chp+".backup", "item3", 
+                             I.tr("Backup channel")+":", 
+                             I.tr("Channel to be tried if this channel fails"), 10, 20, NAME)
+                      else <span></span> 
+                    } ++
                     textField(chp+".host", "item4", 
                           I.tr("Server address")+":", 
                           I.tr("DNS name or IP address for server"), 20, 30, NAME) ++
@@ -571,7 +594,7 @@ package no.polaric.webconfig
          def action(req : Request): NodeSeq = 
          {
               val wasOn = _api.getBoolProperty(chp+".on", false)
-              val chan = _api.getChanManager().get(cid)
+              var chan = _api.getChanManager().get(cid)
               val wasChg = changed 
               changed = false
               
@@ -580,6 +603,7 @@ package no.polaric.webconfig
               getField(req, "item1", chp+".on", BOOLEAN) ++
               getField(req, "item2", chp+".type", CHANTYPE) ++
               { if (is_aprsis || is_tcpkiss)
+                   getField(req, "item3", chp+".backup", NAME) ++
                    getField(req, "item4", chp+".host", NAME) ++ 
                    getField(req, "item5", chp+".port", 1024, 65535) ++ 
                    { if (is_aprsis) 
@@ -594,9 +618,17 @@ package no.polaric.webconfig
               getField(req, "item10", chp+".restrict", BOOLEAN) ++
               getField(req, "item11", chp+".style", NAME) ++ 
               {
+                 val chtype = _api.getProperty(chp+".type", null);
+                 if (chan == null && chtype != null) {
+                    api.getChanManager.newInstance(_api, chtype, cid);
+                    <span class="fieldsuccess">{ I.tr("Creating new channel instance") }<br/></span>
+                 }
+                 else <span></span>
+              } ++
+              {
                   if (changed && wasOn) {
                       chan.deActivate();
-                      <span class="fieldsuccess">Deactivating channel<br/></span>
+                      <span class="fieldsuccess">{ I.tr("Deactivating channel") }<br/></span>
                   }
                   else <span></span>
               } ++
@@ -604,7 +636,7 @@ package no.polaric.webconfig
                   val isOn = _api.getBoolProperty(chp+".on", false)
                   if (changed && isOn) {
                       chan.activate(_api);
-                      <span class="fieldsuccess">Activating channel<br/></span>
+                      <span class="fieldsuccess">{ I.tr("Activating channel") }<br/></span>
                   }
                   else <span></span>
               } ++
