@@ -14,7 +14,7 @@
   CLASSDIR = classes
  CLASSPATH =  /usr/share/java/gettext-commons.jar:polaric-aprsd.jar:jcoord.jar:simple.jar
 INSTALLDIR = /etc/polaric-aprsd/plugins
-     JAVAC = javac -target 1.7
+     JAVAC = javac -source 1.7 -target 1.7
        JAR = jar
 
 # Review (and if necessary) change these if you are going to 

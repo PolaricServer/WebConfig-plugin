@@ -528,8 +528,8 @@ package no.polaric.webconfig
          val is_aprsis = _api.getProperty(chp+".type", "APRSIS").equals("APRSIS")
          val is_tcpkiss = _api.getProperty(chp+".type", "APRSIS").equals("TCPKISS")
          val is_backup = _api.getChanManager().isBackup(cid);
-         val ch = _api.getChanManager().get(cid)
-
+         val ch = _api.getChanManager().get(cid).asInstanceOf[AprsChannel]
+           /* FIXME: Now this method only supports APRS channels */
          
          def fields(req : Request): NodeSeq = 
          {      
