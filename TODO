@@ -1,4 +1,4 @@
-VERSION 1.4.1 and/or later
+VERSION 1.8.1 and/or later
 --------------------------
      
 * Better way to handle user regexes?
@@ -14,3 +14,5 @@ VERSION 1.4.1 and/or later
 * Update of channel-list: Update menu 
 
 * Revert back to default values. Button in webinterface. 
+
+* MVC design for channel config

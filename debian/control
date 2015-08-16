@@ -2,13 +2,13 @@ Source: polaric-webconfig-plugin
 Section: hamradio
 Priority: optional
 Maintainer: Øyvind Hanssen <ohanssen@acm.org>
-Build-Depends: debhelper (>= 8.0.0), openjdk-7-jdk, scala (>> 2.7)
+Build-Depends: debhelper (>= 8.0), openjdk-8-jdk, scala (>> 2.11)
 Standards-Version: 3.9.4
 Homepage: http://aprs.no/dokuwiki
 
 Package: polaric-webconfig-plugin
 Architecture: all
-Depends: polaric-aprsd (>= 1.7), polaric-webapp (>= 1.7), sudo, ${misc:Depends}
+Depends: polaric-aprsd (>= 1.8), polaric-webapp (>= 1.8), sudo, ${misc:Depends}
 Recommends: 
 Description: Polaric Server: APRS daemon part. 
  The "Polaric Server" which is mainly a web based service to present APRS 
