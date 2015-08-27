@@ -15,168 +15,18 @@ import org.xnap.commons.i18n._
 
 package no.polaric.webconfig
 {
-
+  object _defs {
+      def PLUGIN = "no.polaric.webconfig"
+  }
+  
+  
   class Webserver 
-      ( val api: ServerAPI ) extends ServerBase(api) with ServerUtils
+      ( val api: ServerAPI ) extends ServerBase(api) with ConfigUtils
   {
       val _wcp = api.properties().get("webconfig.plugin").asInstanceOf[WebconfigPlugin];
-      final val PLUGIN = "no.polaric.webconfig"
+
       
- 
-      protected def refreshPage(req: Request, resp: Response, t: Int, url: String) = 
-      {
-         val mid = req.getParameter("mid");
-         val cid = req.getParameter("chan");
-         var lang = req.getParameter("lang");
-         lang = if (lang==null) "en" else lang
-         val uparm = "?lang=" + lang + 
-           { if (mid != null) "&mid="+mid else "" } + 
-           { if (cid != null) "&chan="+cid else "" }
-            
-         resp.addValue("Refresh", t+";url=\""+url + uparm+"\"")
-      }
-      
-          
-            
-      protected def typeField(propname: String, id: String, lbl: String, title: String) : NodeSeq = 
-      {
-         val pval = _api.getProperty(propname, "")
-         label(id, "leftlab", lbl, title) ++
-         <select name={id} id={id}> 
-            { for (x <- Array("APRSIS", "KISS", "TCPKISS", "TNC2")) yield
-                 <option value={x} selected={if (x.equals(pval)) "selected" else null}>{x}</option>
-            }
-         </select><br/>
-       }           
-          
-          
-      /** Text field with label */
-      protected def textField(propname: String, id: String, lbl: String, title: String, 
-                              length: Int, maxlength: Int, pattern: String, ptext: String): NodeSeq = 
-          label(id, "leftlab", lbl, title) ++ 
-          textInput(id, length, maxlength, pattern, _api.getProperty(propname, "")) ++ 
-          {
-             if (ptext != null)
-                <span class="postfield">{ptext}</span>
-             else null
-          } ++ br
-          ;     
-          
-          
-      protected def textField(propname: String, id: String, lbl: String, title: String, 
-                              length: Int, maxlength: Int, pattern: String): NodeSeq = 
-          textField(propname, id, lbl, title, length, maxlength, pattern, "")
-          ;
-          
-          
-      /** Boolean field without label */    
-      protected def boolField(propname: String, id: String, lbl: String): NodeSeq = 
-          checkBox(id, _api.getBoolProperty(propname,false), TXT(lbl))
-          ;
-          
-          
-      /** Boolean field with label */
-      protected def sBoolField(propname: String, id: String, lbl: String, title: String): NodeSeq =
-          label(id, "leftlab", lbl, title) ++
-          boolField(propname, id, "Aktivert.") ++ br
-          ;
-          
-          
-      /** UTM position field */    
-      protected def utmField(propname: String): NodeSeq = 
-          if (_api.getProperty(propname, null) == null)
-             utmForm('W',33)
-          else
-             utmForm(_api.getProperty(propname, null))
-          ;
-         
-      
-      protected def printState(st: Channel.State, I:I18n): NodeSeq = 
-         st match {
-            case Channel.State.OFF => TXT( I.tr("Inactive (off)"))
-            case Channel.State.STARTING => TXT( I.tr("Connecting..."))
-            case Channel.State.RUNNING => 
-                <span>{ I.tr("Active (ok)") }<img class="state" src="../aprsd/dicons/ok.png"/></span>  
-            case Channel.State.FAILED => 
-                <span>{ I.tr("Inactive (failed)") }<img class="state" src="../aprsd/dicons/fail.png"/></span>
-         }
-         ;
-          
-          
-          
-      /* Regular expressions that define format of input of different types */    
-      val TEXT = ".*"
-      val NAME = "[A-Za-z0-9_\\-\\.\\/]+"
-      val LIST = "([A-Za-z0-9_\\-\\.]+)(,\\s?([A-Za-z0-9_\\-\\.]+))*"
-      val NUMBER = "\\-?[0-9]+"
-      val BOOLEAN = "true|false|TRUE|FALSE"
-      val CALLSIGN = "[A-Za-z0-9]{3,6}(\\-[0-9]{1,2})?"
-      val CHANTYPE = "APRSIS|KISS|TCPKISS|TNC2"
-      val UTMPOS = "[0-9]{2}[A-Za-z]\\s+[0-9]{6}\\s+[0-9]{7}"
-      
-      /* Set to true if value of one or more fields has changed */
-      var changed = false;
-      
-      
-      /**
-       * Get value of a given field from HTTP request parameters.
-       * Check if format of input is correct and if field value has changed. 
-       */
-      protected def _getField(req : Request, value: String, propname: String, pattern: String, 
-          isnum: Boolean, min: Int, max: Int): NodeSeq = 
-      {          
-          val xold = _api.getProperty(propname,"")
-          var x = value;
-          
-          
-          def checkNum(x: String): Boolean = 
-             if (isnum) {
-                val xx = x.toInt
-                xx >= min && xx <= max
-             }
-             else true
-             ;
-             
-             
-          x = if (x == null || (pattern.equals(BOOLEAN) && x.equals(""))) "false" 
-              else x
-              
-          if (("".equals(x) && !"".equals(xold)) || (x != null && x.matches(pattern) && checkNum(x))) 
-               /* Test om vi har endret verdi på et felt */
-               if (!x.equals(xold)) {
-                   changed = true
-                   _api.getConfig().setProperty(propname, x)
-                    <span class="fieldsuccess">Field <b>{propname}</b> = '{x}'. Changed. <br/> </span>
-               }               
-               else <span>Field <b>{propname}</b>. Unchanged.<br/></span>          
-          else if (x != null && !"".equals(x))
-             <span class="fielderror">Field <b>{propname}</b>. Value out of range or format error. Value = '{x}'<br/></span>
-          else <span></span>
-      }
-      
-      
-      
-      protected def getField(req : Request, id: String, propname: String, pattern: String): NodeSeq =
-          _getField(req, req.getParameter(id), propname, pattern, false, 0,0)
-          ;
-          
-          
-      protected def getField(req : Request, id1: String, id2: String, propname: String, pattern: String): NodeSeq =
-          _getField(req, req.getParameter(id1)+req.getParameter(id2), propname, pattern, false, 0,0)
-          ;
-   
-   
-      protected def getUtmField(req : Request, id1: String, id2: String, id3: String, id4: String, propname: String, pattern: String): NodeSeq =
-          _getField(req, req.getParameter(id1)+req.getParameter(id2)+" "+req.getParameter(id3)+" "+req.getParameter(id4), 
-                    propname, pattern, false, 0,0)
-          ;
-          
-          
-      protected def getField(req : Request, id: String, propname: String, min: Int, max: Int): NodeSeq = 
-          _getField(req, req.getParameter(id), propname, NUMBER, true, min, max)
-          ; 
-           
-      
+
     
       /**
        * Handle restarting of the server by calling external script. 
@@ -184,7 +34,7 @@ package no.polaric.webconfig
        */
       def handle_restartServer(req : Request, res: Response) =
       {
-          val I = getI18n(req, PLUGIN)
+          val I = getI18n(req, _defs.PLUGIN)
           refreshPage(req, res, 10, "config_menu")
           
           def action(req : Request): NodeSeq = {
@@ -200,8 +50,7 @@ package no.polaric.webconfig
           printHtml (res, htmlBody (req, null, IF_ADMIN(action)(req) ))
       }
       
-      
-      
+         
           
       
       /** 
@@ -209,7 +58,7 @@ package no.polaric.webconfig
        */
       override def htmlBody(req: Request, xhead : NodeSeq, content : NodeSeq) : Node =
       {
-           val I = getI18n(req, PLUGIN)
+           val I = getI18n(req, _defs.PLUGIN)
            val head = <link href={fprefix(req)+"/config_menu.css"} rel="stylesheet" type="text/css" />
            val heads = if (xhead==null) head else head ++ xhead 
            
@@ -296,7 +145,7 @@ package no.polaric.webconfig
       def handle_config(req : Request, res: Response) =
       { 
           val prefix = <h3>Konfigurasjon av Polaric APRSD</h3>
-          val I = getI18n(req, PLUGIN)
+          val I = getI18n(req, _defs.PLUGIN)
           
           def fields(req : Request): NodeSeq =
                 textField("default.mycall", "item1", 
@@ -387,7 +236,7 @@ package no.polaric.webconfig
        */
       def handle_config_mapdisplay(req : Request, res: Response) =
       {          
-          val I = getI18n(req, PLUGIN)
+          val I = getI18n(req, _defs.PLUGIN)
           val prefix = <h3>{ I.tr("Map display settings") }</h3>
           
           def fields(req : Request): NodeSeq =
@@ -437,7 +286,7 @@ package no.polaric.webconfig
        */
       def handle_config_posreport(req : Request, res: Response) =
       {   
-          val I = getI18n(req, PLUGIN)
+          val I = getI18n(req, _defs.PLUGIN)
           val prefix = <h3>{ I.tr("Tracking of own position") }</h3>
           
           def fields(req : Request): NodeSeq =
@@ -514,139 +363,38 @@ package no.polaric.webconfig
      }
      
      
+     ChannelView.addView(classOf[InetChannel],  classOf[AprsChannelView])
+     ChannelView.addView(classOf[Tnc2Channel],  classOf[AprsChannelView])
+     ChannelView.addView(classOf[KissTncChannel],  classOf[AprsChannelView])
+     ChannelView.addView(classOf[TcpKissChannel],  classOf[AprsChannelView])
+     
      
      /**
       * Configuration of each individual channel. 
       */
      def handle_config_chan(req: Request, res: Response) = 
      {
-         val I = getI18n(req, PLUGIN)
+         val I = getI18n(req, _defs.PLUGIN)        
          val cid = req.getParameter("chan")
-         val chp = "channel."+cid
          val prefix = <h3>{I.tr("Channel")+ " '"+cid+"'"}</h3>
-
-         val is_aprsis = _api.getProperty(chp+".type", "APRSIS").equals("APRSIS")
-         val is_tcpkiss = _api.getProperty(chp+".type", "APRSIS").equals("TCPKISS")
-         val is_backup = _api.getChanManager().isBackup(cid);
-         val ch = _api.getChanManager().get(cid).asInstanceOf[AprsChannel]
-           /* FIXME: Now this method only supports APRS channels */
-         
-         def fields(req : Request): NodeSeq = 
-         {      
-               if (ch != null) 
-                   refreshPage(req, res, 60, "config_chan");
-               { if (ch != null) 
-                    simpleLabel("info4", "leftlab", I.tr("State")+":", printState(ch.getState(), I)) ++ 
-                    simpleLabel("info1", "leftlab", I.tr("Heard stations")+":", TXT(""+ch.nHeard())) ++
-                    simpleLabel("info2", "leftlab", 
-                       I.tr("Traffic in")+":", TXT(""+ch.nHeardPackets()+"  ("+ch.nDuplicates()+" "+I.tr("duplicates")+")")) ++
-                    simpleLabel("info3", "leftlab", I.tr("Traffic out")+":", TXT(""+ch.nSentPackets())) ++ br 
-                    
-                 else <span></span>
-               } ++
-               { if (!is_backup) 
-                   label("item1", "leftlab", I.tr("Channel")+":", I.tr("Tick to activate channel")) ++
-                   boolField(chp+".on", "item1", I.tr("Activated")) ++ br  
-                 else <span></span> 
-               } ++ 
-               typeField(chp+".type", "item2", 
-                     I.tr("Type")+":", 
-                     I.tr("Type (APRSIS, TNC2, KISS or TCPKISS)")) ++
-               { 
-                 if (is_aprsis || is_tcpkiss) 
-                    { if (!is_backup)
-                         textField(chp+".backup", "item3", 
-                             I.tr("Backup channel")+":", 
-                             I.tr("Channel to be tried if this channel fails"), 10, 20, NAME)
-                      else <span></span> 
-                    } ++
-                    textField(chp+".host", "item4", 
-                          I.tr("Server address")+":", 
-                          I.tr("DNS name or IP address for server"), 20, 30, NAME) ++
-                    textField(chp+".port", "item5", 
-                          I.tr("Server port")+":", 
-                          I.tr("Port number"), 6, 6, NUMBER) ++
-                    { if (is_aprsis)
-                        textField(chp+".pass", "item6", 
-                              I.tr("Passcode")+":", 
-                              I.tr("APRS/IS verification code"), 6, 6, NUMBER) ++
-                        textField(chp+".filter", "item7", 
-                              I.tr("Filter")+":", 
-                              I.tr("APRS/IS filter-string"), 30, 50, TEXT) 
-                      else <span></span> 
-                    } 
-                 else 
-                    textField(chp+".port", "item8", 
-                          I.tr("Port")+":", 
-                          I.tr("Serial port device-name (e.g. /dev/ttyS0)"), 12, 20, NAME) ++
-                    textField(chp+".baud", "item9", 
-                          I.tr("Baud")+":", "", 6, 8, NUMBER) 
-               } ++ br ++
-               label("item10", "leftlab", 
-                     I.tr("Visibility")+":", 
-                     I.tr("Tick to limit access to logged in users")) ++
-               boolField(chp+".restrict", "item10", I.tr("Only for logged in users")) ++ br ++
-               textField(chp+".style", "item11", I.tr("CSS style name")+":", "", 10, 10, NAME)
+         val ch = _api.getChanManager().get(cid).asInstanceOf[Channel]
+           
+         val view = if (ch == null)
+                         new ChannelView(_api, null, req);  
+                    else ChannelView.getViewFor(ch, _api, req)
+           
+         def fields(req: Request): NodeSeq = {
+            if (ch != null) 
+               refreshPage(req, res, 60, "config_chan")
+            view.fields(req)
+         }
+         def action(req: Request): NodeSeq = {
+            refreshPage(req, res, 3, "config_chan")
+            view.action(req)
          }
          
-         
-         
-         def action(req : Request): NodeSeq = 
-         {
-              val wasOn = _api.getBoolProperty(chp+".on", false)
-              var chan = _api.getChanManager().get(cid)
-              val wasChg = changed 
-              changed = false
-              
-              refreshPage(req, res, 3, "config_chan")
-              br ++ br ++
-              getField(req, "item1", chp+".on", BOOLEAN) ++
-              getField(req, "item2", chp+".type", CHANTYPE) ++
-              { if (is_aprsis || is_tcpkiss)
-                   getField(req, "item3", chp+".backup", NAME) ++
-                   getField(req, "item4", chp+".host", NAME) ++ 
-                   getField(req, "item5", chp+".port", 1024, 65535) ++ 
-                   { if (is_aprsis) 
-                        getField(req, "item6", chp+".pass", 0, 99999) ++ 
-                        getField(req, "item7", chp+".filter", TEXT)
-                     else <span></span>
-                   }
-                else
-                   getField(req, "item8", chp+".port", NAME) ++
-                   getField(req, "item9", chp+".baud", 300, 999999)
-              } ++
-              getField(req, "item10", chp+".restrict", BOOLEAN) ++
-              getField(req, "item11", chp+".style", NAME) ++ 
-              {
-                 val chtype = _api.getProperty(chp+".type", null);
-                 if (chan == null && chtype != null) {
-                    api.getChanManager.newInstance(_api, chtype, cid);
-                    <span class="fieldsuccess">{ I.tr("Creating new channel instance") }<br/></span>
-                 }
-                 else <span></span>
-              } ++
-              {
-                  if (changed && wasOn) {
-                      chan.deActivate();
-                      <span class="fieldsuccess">{ I.tr("Deactivating channel") }<br/></span>
-                  }
-                  else <span></span>
-              } ++
-              {  
-                  val isOn = _api.getBoolProperty(chp+".on", false)
-                  if (changed && isOn) {
-                      chan.activate(_api);
-                      <span class="fieldsuccess">{ I.tr("Activating channel") }<br/></span>
-                  }
-                  else <span></span>
-              } ++
-              {
-                  changed = wasChg
-                  <span></span>
-              }
-         }
-              
-         printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, default_submit)))     
+         printHtml (res, htmlBody ( req, null, 
+             htmlForm( req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, default_submit)))    
      }
      
      
@@ -656,7 +404,7 @@ package no.polaric.webconfig
       */
       def handle_passwd(req: Request, res: Response) = 
       {
-          val I = getI18n(req, PLUGIN)
+          val I = getI18n(req, _defs.PLUGIN)
           val prefix = <h3>{ I.tr("Register user/password") }</h3>
           var username = getAuthUser(req)
           
