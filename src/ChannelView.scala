@@ -123,10 +123,14 @@ package no.polaric.webconfig
                  I.tr("Visibility")+":", 
                  I.tr("Tick to limit access to logged in users")) ++
              boolField(chp+".restrict", "item10", I.tr("Only for logged in users")) ++ br ++
-             textField(chp+".style", "item11", I.tr("CSS style name")+":", "", 10, 10, NAME)
+             textField(chp+".tag", "item11", I.tr("Tag")+":", "", 10, 10, NAME)
              ;
          
-         
+         protected def action_visibility: NodeSeq = 
+             getField(req, "item10", chp+".restrict", BOOLEAN) ++
+             getField(req, "item11", chp+".tag", NAME)
+             ;
+             
          
          protected def action_activate = {    
              val chtype = _api.getProperty(chp+".type", null);
