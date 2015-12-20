@@ -35,7 +35,7 @@ package no.polaric.webconfig
       def handle_restartServer(req : Request, res: Response) =
       {
           val I = getI18n(req, _defs.PLUGIN)
-          refreshPage(req, res, 10, "config_menu")
+          refreshPage(req, res, 15, "config_menu")
           
           def action(req : Request): NodeSeq = {
 

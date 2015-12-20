@@ -16,3 +16,10 @@ VERSION 1.8.1 and/or later
 * Revert back to default values. Button in webinterface. 
 
 * MVC design for channel config
+     DONE
+     
+* When plugin package is removed. Is it removed completely? Fix!!
+    www/auto/wcobconfig*
+    polaric-webconfig.jar
+    
+    

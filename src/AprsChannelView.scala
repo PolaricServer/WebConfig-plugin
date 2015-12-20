@@ -96,8 +96,7 @@ package no.polaric.webconfig
                    getField(req, "item8", chp+".port", NAME) ++
                    getField(req, "item9", chp+".baud", 300, 999999)
               } ++
-              getField(req, "item10", chp+".restrict", BOOLEAN) ++
-              getField(req, "item11", chp+".style", NAME) ++ 
+              action_visibility ++
               action_activate
               ; 
              
