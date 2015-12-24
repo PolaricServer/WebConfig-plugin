@@ -24,7 +24,7 @@ public class WebconfigPlugin implements PluginManager.Plugin
             * Activate the web services 
             */
            api.properties().put("webconfig.plugin", this); 
-           api.addHttpHandlerCls("no.polaric.webconfig.Webserver", null);   
+           api.addHttpHandlerCls("no.polaric.webconfig.Webservices", null);   
         }
         catch (Exception e) {
             System.out.println("*** Activate WebconfigPlugin: "+e);

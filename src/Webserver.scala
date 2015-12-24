@@ -20,7 +20,7 @@ package no.polaric.webconfig
   }
   
   
-  class Webserver 
+  class Webservices
       ( val api: ServerAPI ) extends ServerBase(api) with ConfigUtils
   {
       val _wcp = api.properties().get("webconfig.plugin").asInstanceOf[WebconfigPlugin];
