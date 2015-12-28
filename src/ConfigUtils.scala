@@ -81,7 +81,6 @@ package no.polaric.webconfig
       protected def typeField(propname: String, id: String, lbl: String, title: String) : NodeSeq = 
       {
          val pval = getApi.getProperty(propname, "")
-         System.out.println("*** BERT: "+ConfigUtils.CHANTYPE);
          label(id, "leftlab", lbl, title) ++
          <select name={id} id={id}> 
             { for (x <- ConfigUtils.chantype) yield

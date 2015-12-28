@@ -143,9 +143,9 @@ package no.polaric.webconfig
        * The main configuration of aprsd. Callsign, users, channels. Igate. Remote control.
        */
       def handle_config(req : Request, res: Response) =
-      { 
-          val prefix = <h3>Konfigurasjon av Polaric APRSD</h3>
+      {            
           val I = getI18n(req, _defs.PLUGIN)
+          val prefix = <h3>{I.tr("Configuration of Polaric APRSD")}</h3>
           
           def fields(req : Request): NodeSeq =
                 textField("default.mycall", "item1", 
