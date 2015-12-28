@@ -57,6 +57,7 @@ package no.polaric.webconfig
          val prefix = <h3>{I.tr("Channel")+ " '"+cid+"'"}</h3>
          val is_backup = _api.getChanManager().isBackup(cid);
          var wasOn = _api.getBoolProperty(chp+".on", false)
+         val wasType = _api.getProperty(chp+".type", null);      
                 
                 
          def state: NodeSeq = 
@@ -138,7 +139,7 @@ package no.polaric.webconfig
              val isOn = _api.getBoolProperty(chp+".on", false)
             
             
-             { if (chan == null && chtype != null) {
+             { if (chan == null && chtype != null || !chtype.equals(wasType) ) {
                     api.getChanManager.newInstance(_api, chtype, cid);
                     <span class="fieldsuccess">{ I.tr("Creating new channel instance") }<br/></span>
                  }

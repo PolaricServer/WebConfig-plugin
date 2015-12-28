@@ -65,8 +65,8 @@ package no.polaric.webconfig
              
          override def fields(req : Request): NodeSeq =   
               state ++
-              showtype ++
-              aprstraffic ++
+              { if (!wasOn) typefield else showtype } ++
+              { if (wasOn) aprstraffic else br } ++
               activate ++ 
               { 
                  if (is_aprsis || is_tcpkiss) 
@@ -84,6 +84,7 @@ package no.polaric.webconfig
          override def action(req : Request): NodeSeq = 
               br ++ br ++
               getField(req, "item1", chp+".on", BOOLEAN) ++
+              getField(req, "item2", chp+".type", ConfigUtils.CHANTYPE) ++
               { if (is_aprsis || is_tcpkiss)
                    getField(req, "item3", chp+".backup", NAME) ++
                    action_inetaddr(chp) ++
