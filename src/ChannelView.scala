@@ -57,7 +57,7 @@ package no.polaric.webconfig
          val prefix = <h3>{I.tr("Channel")+ " '"+cid+"'"}</h3>
          val is_backup = _api.getChanManager().isBackup(cid);
          var wasOn = _api.getBoolProperty(chp+".on", false)
-         val wasType = _api.getProperty(chp+".type", null);      
+         var wasType = _api.getProperty(chp+".type", null);      
                 
                 
          def state: NodeSeq = 
@@ -132,23 +132,34 @@ package no.polaric.webconfig
              getField(req, "item11", chp+".tag", NAME)
              ;
              
-         
+        
+         protected def clear_config(chp: String) = {
+             val cf = _api.getConfig()
+             cf.remove(chp+".port")
+             cf.remove(chp+".baud")
+             cf.remove(chp+".host")
+             cf.remove(chp+".backup")
+             cf.setProperty(chp+".port", "")
+         }
+             
+             
          protected def action_activate = {    
              val chtype = _api.getProperty(chp+".type", null);
              var chan = _api.getChanManager().get(cid)
              val isOn = _api.getBoolProperty(chp+".on", false)
             
             
-             { if (chan == null && chtype != null || !chtype.equals(wasType) ) {
-                    api.getChanManager.newInstance(_api, chtype, cid);
-                    <span class="fieldsuccess">{ I.tr("Creating new channel instance") }<br/></span>
-                 }
-                 else EMPTY
-             } ++
              {
                   if ((changed || !isOn) && wasOn) {
                       chan.deActivate();
                       <span class="fieldsuccess">{ I.tr("Deactivating channel") }<br/></span>
+                  }
+                  else EMPTY
+             } ++
+             {    if ((chan == null && chtype != null) || !chtype.equals(wasType) ) {
+                      clear_config(chp); 
+                      api.getChanManager.newInstance(_api, chtype, cid);
+                      <span class="fieldsuccess">{ I.tr("Creating new channel instance") }<br/></span>
                   }
                   else EMPTY
              } ++
@@ -161,6 +172,7 @@ package no.polaric.webconfig
              } ++
              {
                   wasOn = isOn;
+                  wasType = chtype;
                   changed = false; 
                   EMPTY
              }

@@ -37,8 +37,8 @@ package no.polaric.webconfig
              extends ChannelView(api, model, req) with ConfigUtils
    {
    
-         val is_aprsis = _api.getProperty(chp+".type", "APRSIS").equals("APRSIS")
-         val is_tcpkiss = _api.getProperty(chp+".type", "APRSIS").equals("TCPKISS")
+         def is_aprsis = wasType.equals("APRSIS"); 
+         def is_tcpkiss = wasType.equals("TCPKISS"); 
 
             
          protected def aprstraffic: NodeSeq = 
@@ -63,13 +63,13 @@ package no.polaric.webconfig
            
               
              
-         override def fields(req : Request): NodeSeq =   
+         override def fields(req : Request): NodeSeq =  
               state ++
               { if (!wasOn) typefield else showtype } ++
               { if (wasOn) aprstraffic else br } ++
               activate ++ 
               { 
-                 if (is_aprsis || is_tcpkiss) 
+                 if (is_aprsis  || is_tcpkiss) 
                     backupchan ++
                     inetaddr ++
                     aprsis
@@ -84,7 +84,7 @@ package no.polaric.webconfig
          override def action(req : Request): NodeSeq = 
               br ++ br ++
               getField(req, "item1", chp+".on", BOOLEAN) ++
-              getField(req, "item2", chp+".type", ConfigUtils.CHANTYPE) ++
+              { if (!wasOn) getField(req, "item2", chp+".type", ConfigUtils.CHANTYPE) else EMPTY } ++
               { if (is_aprsis || is_tcpkiss)
                    getField(req, "item3", chp+".backup", NAME) ++
                    action_inetaddr(chp) ++
