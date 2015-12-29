@@ -12,32 +12,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:13
-#: www/webconfig.js:13
+#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:12
+#: www/webconfig.js:12
 msgid "User/password.."
 msgstr "Bruker/passord.."
 
-#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:15
-#: www/webconfig.js:15
+#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:14
+#: www/webconfig.js:14
 msgid "Admin/configuration.."
 msgstr "Admin/konfigurasjon.."
 
-#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:17
-#: www/webconfig.js:17
+#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:16
+#: www/webconfig.js:16
 msgid "Server status info.."
 msgstr "Server status info.."
 
-#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:23
-#: www/webconfig.js:23
+#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:22
+#: www/webconfig.js:22
 msgid "Password"
 msgstr "Passord"
 
-#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:26
-#: www/webconfig.js:26
+#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:25
+#: www/webconfig.js:25
 msgid "Config"
 msgstr "Konfig"
 
-#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:29
-#: www/webconfig.js:29
+#: debian/polaric-webconfig-plugin/etc/polaric-webapp/www/auto/webconfig.js:28
+#: www/webconfig.js:28
 msgid "Status"
 msgstr "Status"

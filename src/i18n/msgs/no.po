@@ -44,451 +44,458 @@ msgstr "Filter"
 msgid "APRS/IS filter-string"
 msgstr "APRS/IS filter-streng"
 
-#: src/ChannelView.scala:57 src/ChannelView.scala:71 src/Webserver.scala:375
+#: src/ChannelView.scala:57 src/ChannelView.scala:72 src/Webserver.scala:379
 msgid "Channel"
 msgstr "Kanal"
 
-#: src/ChannelView.scala:64
+#: src/ChannelView.scala:65
 msgid "State"
 msgstr "Tilstand"
 
-#: src/ChannelView.scala:71
+#: src/ChannelView.scala:72
 msgid "Tick to activate channel"
 msgstr "Kryss av for å aktivere kanal"
 
-#: src/ChannelView.scala:72 src/Webserver.scala:293 src/Webserver.scala:315
+#: src/ChannelView.scala:73 src/Webserver.scala:297 src/Webserver.scala:319
 msgid "Activated"
 msgstr "Aktivert"
 
-#: src/ChannelView.scala:79
+#: src/ChannelView.scala:80 src/ChannelView.scala:85
 msgid "Type"
 msgstr "Type"
 
-#: src/ChannelView.scala:80
-msgid "Type (APRSIS, TNC2, KISS or TCPKISS)"
-msgstr "Type (APRSIS, TNC2, KISS eller TCPKISS)"
+#: src/ChannelView.scala:81
+msgid "Type (APRSIS, TNC2, KISS or TCPKISS, etc..)"
+msgstr "Type (APRSIS, TNC2, KISS eller TCPKISS, osv..)"
 
-#: src/ChannelView.scala:87
+#: src/ChannelView.scala:91
 msgid "Backup channel"
 msgstr "Backup kanal"
 
-#: src/ChannelView.scala:88
+#: src/ChannelView.scala:92
 msgid "Channel to be tried if this channel fails"
 msgstr "Alternativ kanal hvis denne kanalen feiler"
 
-#: src/ChannelView.scala:95
+#: src/ChannelView.scala:99
 msgid "Server address"
 msgstr "Server adresse"
 
-#: src/ChannelView.scala:96
+#: src/ChannelView.scala:100
 msgid "DNS name or IP address for server"
 msgstr "DNS navn eller IP adresse for server"
 
-#: src/ChannelView.scala:98
+#: src/ChannelView.scala:102
 msgid "Server port"
 msgstr "Server port"
 
-#: src/ChannelView.scala:99
+#: src/ChannelView.scala:103
 msgid "Port number"
 msgstr "Port nr"
 
-#: src/ChannelView.scala:111
+#: src/ChannelView.scala:115
 msgid "Port"
 msgstr "Port"
 
-#: src/ChannelView.scala:112 src/Webserver.scala:320
+#: src/ChannelView.scala:116 src/Webserver.scala:324
 msgid "Serial port device-name (e.g. /dev/ttyS0)"
 msgstr "Serieport enhetsnavn (f.eks. /dev/ttyS0)"
 
-#: src/ChannelView.scala:114
+#: src/ChannelView.scala:118
 msgid "Baud"
 msgstr "Baud"
 
-#: src/ChannelView.scala:120
+#: src/ChannelView.scala:124
 msgid "Visibility"
 msgstr "Synlighet"
 
-#: src/ChannelView.scala:121
+#: src/ChannelView.scala:125
 msgid "Tick to limit access to logged in users"
 msgstr "Kryss av for å begrense innsyn til innloggede brukere"
 
-#: src/ChannelView.scala:122
+#: src/ChannelView.scala:126
 msgid "Only for logged in users"
 msgstr "Kun for innloggede brukere"
 
-#: src/ChannelView.scala:123
-msgid "CSS style name"
-msgstr "CSS stilnavn"
+#: src/ChannelView.scala:127
+msgid "Tag"
+msgstr "Tag"
 
-#: src/ChannelView.scala:137
-msgid "Creating new channel instance"
-msgstr "Oppretter ny instans av kanal"
-
-#: src/ChannelView.scala:144
+#: src/ChannelView.scala:155
 msgid "Deactivating channel"
 msgstr "Deaktiverer kanal"
 
-#: src/ChannelView.scala:152
+#: src/ChannelView.scala:162
+msgid "Creating new channel instance"
+msgstr "Oppretter ny instans av kanal"
+
+#: src/ChannelView.scala:169
 msgid "Activating channel"
 msgstr "Aktiverer kanal"
 
-#: src/ChannelView.scala:164
+#: src/ChannelView.scala:183
 msgid "New channel:"
 msgstr "Ny kanal:"
 
-#: src/ChannelView.scala:165
+#: src/ChannelView.scala:184
 msgid "Select the type of channel to create and press 'Update'."
 msgstr "Velg hvilken type kanal du vil opprette og trykk 'Oppdater'."
 
-#: src/ConfigUtils.scala:122
+#: src/ConfigUtils.scala:138
 msgid "Inactive (off)"
 msgstr "Inaktiv (avslått)"
 
-#: src/ConfigUtils.scala:123
+#: src/ConfigUtils.scala:139
 msgid "Connecting..."
 msgstr "Kobler opp..."
 
-#: src/ConfigUtils.scala:125
+#: src/ConfigUtils.scala:141
 msgid "Active (ok)"
 msgstr "Aktiv (ok)"
 
-#: src/ConfigUtils.scala:127
+#: src/ConfigUtils.scala:143
 msgid "Inactive (failed)"
 msgstr "Inaktiv (feilet)"
 
-#: src/Webserver.scala:43
+#: src/Webserver.scala:47
 msgid "Restart server..."
 msgstr "Restart server..."
 
-#: src/Webserver.scala:82
+#: src/Webserver.scala:86
 msgid "Status info"
 msgstr "Status info"
 
-#: src/Webserver.scala:83
+#: src/Webserver.scala:87
 msgid "Server config"
 msgstr "Server konfig"
 
-#: src/Webserver.scala:84
+#: src/Webserver.scala:88
 msgid "Own position"
 msgstr "Min posisjon"
 
-#: src/Webserver.scala:85
+#: src/Webserver.scala:89
 msgid "Display on map"
 msgstr "Visning på kart"
 
-#: src/Webserver.scala:87
+#: src/Webserver.scala:91
 msgid "Data channels..."
 msgstr "Datakanaler..."
 
-#: src/Webserver.scala:105
+#: src/Webserver.scala:109
 msgid "Changes are done. Restart to activate."
 msgstr "Endringer er gjort. Restart for å aktivere."
 
 #: src/Webserver.scala:148
+msgid "Configuration of Polaric APRSD"
+msgstr "Konfigurering av Polaric APRSD"
+
+#: src/Webserver.scala:152
 msgid "Callsign"
 msgstr "Kallesignal"
 
-#: src/Webserver.scala:150
+#: src/Webserver.scala:154
 msgid "Admin users"
 msgstr "Admin brukere"
 
-#: src/Webserver.scala:151
+#: src/Webserver.scala:155
 msgid "Full admin-rights"
 msgstr "Fulle admin-rettigheter"
 
-#: src/Webserver.scala:153
+#: src/Webserver.scala:157
 msgid "SAR users"
 msgstr "SAR brukere"
 
-#: src/Webserver.scala:154
+#: src/Webserver.scala:158
 msgid "Ordinary SAR users"
 msgstr "Vanlige SAR brukere"
 
-#: src/Webserver.scala:157
+#: src/Webserver.scala:161
 msgid "Data channels"
 msgstr "Datakanaler"
 
-#: src/Webserver.scala:158
+#: src/Webserver.scala:162
 msgid "Data channels for tracking"
 msgstr "Datakanaler for sporing"
 
-#: src/Webserver.scala:160
+#: src/Webserver.scala:164
 msgid "Primary APRS/IS channel"
 msgstr "Primær APRS/IS kanal"
 
-#: src/Webserver.scala:162
+#: src/Webserver.scala:166
 msgid "Primary RF channel"
 msgstr "Primær RF kanal"
 
-#: src/Webserver.scala:165
+#: src/Webserver.scala:169
 msgid "Igate"
 msgstr "Igate"
 
-#: src/Webserver.scala:166
+#: src/Webserver.scala:170
 msgid "Tick to activate RF<->internet gateway"
 msgstr "Kryss av for å aktivere RF<->internett gateway"
 
-#: src/Webserver.scala:168 src/Webserver.scala:173 src/Webserver.scala:193
+#: src/Webserver.scala:172 src/Webserver.scala:177 src/Webserver.scala:197
 msgid "Activated."
 msgstr "Aktivert."
 
-#: src/Webserver.scala:170
+#: src/Webserver.scala:174
 msgid "Igating to RF"
 msgstr "Igating til RF"
 
-#: src/Webserver.scala:171
+#: src/Webserver.scala:175
 msgid "Tick to activate internet->RF igating"
 msgstr "Kryss av for å aktivere internett->RF igating"
 
-#: src/Webserver.scala:175
+#: src/Webserver.scala:179
 msgid "RF igating for objects."
 msgstr "RF igating for objekter."
 
-#: src/Webserver.scala:177
+#: src/Webserver.scala:181
 msgid "Radius objects"
 msgstr "Radius objekter"
 
-#: src/Webserver.scala:178
+#: src/Webserver.scala:182
 msgid "Area for sending of objects RF"
 msgstr "Område for utsending av objekter RF"
 
-#: src/Webserver.scala:180
+#: src/Webserver.scala:184
 msgid "Digipeater path, igate"
 msgstr "Digipeater sti, igate"
 
-#: src/Webserver.scala:181
+#: src/Webserver.scala:185
 msgid "Default (see also next field)"
 msgstr "Default (se også neste felt)"
 
-#: src/Webserver.scala:183
+#: src/Webserver.scala:187
 msgid "Digi path, messages"
 msgstr "Digipeater sti, meldinger"
 
-#: src/Webserver.scala:184
+#: src/Webserver.scala:188
 msgid "...has also effect for messages to RF igate"
 msgstr "...gjelder også meldinger til RF igate"
 
-#: src/Webserver.scala:186
+#: src/Webserver.scala:190
 msgid "Digipeater path, objects"
 msgstr "Digipeater sti, objekter"
 
-#: src/Webserver.scala:187
+#: src/Webserver.scala:191
 msgid "...has also effect for objects to RF igate"
 msgstr "...gjelder også objekter til RF igate"
 
-#: src/Webserver.scala:190
+#: src/Webserver.scala:194
 msgid "Remote control"
 msgstr "Fjernkontroll"
 
-#: src/Webserver.scala:191
+#: src/Webserver.scala:195
 msgid "Tick to activate remote control"
 msgstr "Kryss av for å aktivere fjernkontroll"
 
-#: src/Webserver.scala:196
+#: src/Webserver.scala:200
 msgid "Rc server"
 msgstr "Fk server"
 
-#: src/Webserver.scala:197
+#: src/Webserver.scala:201
 msgid "Rc server (callsign of another PS instance)"
 msgstr "Fk server (kallesignal til annen PS instans)"
 
-#: src/Webserver.scala:199
+#: src/Webserver.scala:203
 msgid "Authentication key"
 msgstr "Autentiserings nøkkel"
 
-#: src/Webserver.scala:200
+#: src/Webserver.scala:204
 msgid "Key for authentication (for remote control)"
 msgstr "Nøkkel for autentisering (for fjernkontroll)"
 
-#: src/Webserver.scala:236
+#: src/Webserver.scala:240
 msgid "Map display settings"
 msgstr "Kartvisnings instillinger"
 
-#: src/Webserver.scala:240
+#: src/Webserver.scala:244
 msgid "Max inactivity"
 msgstr "Maks inaktivitet"
 
-#: src/Webserver.scala:241
+#: src/Webserver.scala:245
 msgid "How long can an object be inactive before it disappears"
 msgstr "Hvor lenge kan et objekt være inaktivt før det forsvinner"
 
-#: src/Webserver.scala:242 src/Webserver.scala:247 src/Webserver.scala:250
-#: src/Webserver.scala:255 src/Webserver.scala:259
+#: src/Webserver.scala:246 src/Webserver.scala:251 src/Webserver.scala:254
+#: src/Webserver.scala:259 src/Webserver.scala:263
 msgid "(minutes)"
 msgstr "(minutter)"
 
-#: src/Webserver.scala:245
+#: src/Webserver.scala:249
 msgid "Max inactivity for trail"
 msgstr "Maks inaktivitet for spor"
 
-#: src/Webserver.scala:246
+#: src/Webserver.scala:250
 msgid "How long can an object be inactive before its trail disappears"
 msgstr "Hvor lenge kan et objekt være inaktivt før spor forsvinner"
 
-#: src/Webserver.scala:249 src/Webserver.scala:257
+#: src/Webserver.scala:253 src/Webserver.scala:261
 msgid ".. slow speed"
 msgstr ".. sakte fart"
 
-#: src/Webserver.scala:250
+#: src/Webserver.scala:254
 msgid "Max inactivity time when speed is low"
 msgstr "Maks inaktivitet ved sakte fart"
 
-#: src/Webserver.scala:253
+#: src/Webserver.scala:257
 msgid "Trail length"
 msgstr "Sporlengde"
 
-#: src/Webserver.scala:254
+#: src/Webserver.scala:258
 msgid "How long timespan to draw a trail for"
 msgstr "Hvor langt tidsrom skal vi tegne spor for"
 
-#: src/Webserver.scala:258
+#: src/Webserver.scala:262
 msgid "Trail length when speed is low"
 msgstr "Sporlengde ved lav fart"
 
-#: src/Webserver.scala:286
+#: src/Webserver.scala:290
 msgid "Tracking of own position"
 msgstr "Sporing av egen posisjon"
 
-#: src/Webserver.scala:290
+#: src/Webserver.scala:294
 msgid "Position report"
 msgstr "Posisjonsrapport"
 
-#: src/Webserver.scala:291
+#: src/Webserver.scala:295
 msgid "Tick to activate position reporting"
 msgstr "Kryss av for å aktivere posisjonsrapportering"
 
-#: src/Webserver.scala:295
+#: src/Webserver.scala:299
 msgid "Allow transmission on RF"
 msgstr "Tillat sending på RF"
 
-#: src/Webserver.scala:298
+#: src/Webserver.scala:302
 msgid "Symbol"
 msgstr "Symbol"
 
-#: src/Webserver.scala:299
+#: src/Webserver.scala:303
 msgid "APRS symbol-table and symbol"
 msgstr "APRS symboltabell og symbol"
 
-#: src/Webserver.scala:304
+#: src/Webserver.scala:308
 msgid "Digipeater path"
 msgstr "Digipeater sti"
 
-#: src/Webserver.scala:306
+#: src/Webserver.scala:310
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: src/Webserver.scala:308
+#: src/Webserver.scala:312
 msgid "My position"
 msgstr "Min posisjon"
 
-#: src/Webserver.scala:309
+#: src/Webserver.scala:313
 msgid "Server's position in UTM format"
 msgstr "Serverens posisjon i UTM format"
 
-#: src/Webserver.scala:312
+#: src/Webserver.scala:316
 msgid "Tracking with GPS"
 msgstr "Sporing med GPS"
 
-#: src/Webserver.scala:313
+#: src/Webserver.scala:317
 msgid "Tick to use position from GPS"
 msgstr "Kryss av for å bruke posisjon fra GPS"
 
-#: src/Webserver.scala:317
+#: src/Webserver.scala:321
 msgid "Adjust clock from GPS"
 msgstr "Juster klokke fra GPS"
 
-#: src/Webserver.scala:319
+#: src/Webserver.scala:323
 msgid "GPS Port"
 msgstr "GPS Port"
 
-#: src/Webserver.scala:322
+#: src/Webserver.scala:326
 msgid "GPS Baud"
 msgstr "GPS Baud"
 
-#: src/Webserver.scala:324
+#: src/Webserver.scala:328
 msgid "Min pause"
 msgstr "Min pause"
 
-#: src/Webserver.scala:325 src/Webserver.scala:328
+#: src/Webserver.scala:329 src/Webserver.scala:332
 msgid "(seconds)"
 msgstr "(sekunder)"
 
-#: src/Webserver.scala:325
+#: src/Webserver.scala:329
 msgid "Minimum time between transmissions"
 msgstr "Minimum tid mellom sendinger"
 
-#: src/Webserver.scala:327
+#: src/Webserver.scala:331
 msgid "Max pause"
 msgstr "Maks pause"
 
-#: src/Webserver.scala:328
+#: src/Webserver.scala:332
 msgid "Maximum time between transmissions"
 msgstr "Maksimum tid mellom sendinger"
 
-#: src/Webserver.scala:330
+#: src/Webserver.scala:334
 msgid "Min distance"
 msgstr "Min distanse"
 
-#: src/Webserver.scala:331
+#: src/Webserver.scala:335
 msgid "(meter)"
 msgstr "(meter)"
 
-#: src/Webserver.scala:331
+#: src/Webserver.scala:335
 msgid "Distance between transmissions when speed is low"
 msgstr "Distanse mellom sendinger når fart er lav"
 
-#: src/Webserver.scala:333
+#: src/Webserver.scala:337
 msgid "Max turn"
 msgstr "Maks turn"
 
-#: src/Webserver.scala:334
+#: src/Webserver.scala:338
 msgid "(degrees)"
 msgstr "(grader)"
 
-#: src/Webserver.scala:334
+#: src/Webserver.scala:338
 msgid "Max change in direction before transmission"
 msgstr "Maks endring i retning før sending"
 
-#: src/Webserver.scala:405
+#: src/Webserver.scala:408
 msgid "Register user/password"
 msgstr "Registrer bruker/passord"
 
-#: src/Webserver.scala:411
+#: src/Webserver.scala:414
 msgid "Username"
 msgstr "Brukernavn"
 
-#: src/Webserver.scala:411
+#: src/Webserver.scala:414
 msgid "Username for new or existing user"
 msgstr "Brukernavn for ny eller eksisterende bruker"
 
-#: src/Webserver.scala:418
+#: src/Webserver.scala:421
 msgid "Password"
 msgstr "Passord"
 
-#: src/Webserver.scala:434
+#: src/Webserver.scala:437
 msgid "Password for user '{0}' updated"
 msgstr "Passord for bruker '{0}' oppdatert"
 
-#: src/Webserver.scala:436
+#: src/Webserver.scala:439
 msgid "Error: Your input is too long"
 msgstr "Feil: Oppgitt verdi er for lang"
 
-#: src/Webserver.scala:438
+#: src/Webserver.scala:441
 msgid "Error: Your input contains illegal characters"
 msgstr "Feil: Oppgitt verdi inneholder ulovlige tegn"
 
-#: src/Webserver.scala:440
+#: src/Webserver.scala:443
 msgid "Error: Couldn't update (server problem)"
 msgstr "Feil: Kunne ikke oppdatere (server problem)"
 
-#~ msgid "Off"
-#~ msgstr "Avslått"
-
-#~ msgid "Running"
-#~ msgstr "Kjører"
+#~ msgid "Kanal"
+#~ msgstr "Kanal"
 
 #~ msgid "Failed"
 #~ msgstr "Feilet"
 
-#~ msgid "Kanal"
-#~ msgstr "Kanal"
+#~ msgid "Running"
+#~ msgstr "Kjører"
+
+#~ msgid "Off"
+#~ msgstr "Avslått"
+
+#~ msgid "CSS style name"
+#~ msgstr "CSS stilnavn"
