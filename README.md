@@ -22,7 +22,7 @@ Linux/Java platform (tested with Debian/Ubuntu/Mint) with
 ## Installation
 
 We provide a Debian package. For information on getting started on a Debian/Ubuntu 
-platform please see: http://aprs.no/dokuwiki/doku.php?id=installation
+platform please see: http://aprs.no/dokuwiki/doku.php?id=install.dev
 
 Add the following to the server.ini file and restart: 
 
