@@ -15,10 +15,10 @@ public class WebconfigPlugin implements PluginManager.Plugin
      
      /** Start the plugin  */
       public void activate(ServerAPI api)
-      {
+      {        
+        _api = api; 
          try {
-           System.out.println("*** WebconfigPlugin.activate");
-           _api = api; 
+           _api.log().info("WebconfigPlugin", "Activate...");
 
            /* 
             * Activate the web services 
@@ -27,7 +27,7 @@ public class WebconfigPlugin implements PluginManager.Plugin
            api.addHttpHandlerCls("no.polaric.webconfig.Webservices", null);   
         }
         catch (Exception e) {
-            System.out.println("*** Activate WebconfigPlugin: "+e);
+            _api.log().error("WebconfigPlugin", ""+e);
             e.printStackTrace(System.out); 
         }  
       }
