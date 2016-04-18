@@ -248,18 +248,11 @@ package no.polaric.webconfig
                 textField("map.trail.maxPause", "item2", 
                      I.tr("Max inactivity for trail")+":", 
                      I.tr("How long can an object be inactive before its trail disappears"), 
-                     4, 4, NUMBER, I.tr("(minutes)")) ++
-                textField("map.trail.maxPause.extended", "item3", 
-                     I.tr(".. slow speed")+":", 
-                     I.tr("Max inactivity time when speed is low"), 4, 4, NUMBER, I.tr("(minutes)")) ++          
+                     4, 4, NUMBER, I.tr("(minutes)")) ++        
                 br ++
                 textField("map.trail.maxAge", "item4", 
                      I.tr("Trail length")+":", 
                      I.tr("How long timespan to draw a trail for"), 
-                     4, 4, NUMBER, I.tr("(minutes)")) ++
-                textField("map.trail.maxAge.extended", "item5", 
-                     I.tr(".. slow speed")+":", 
-                     I.tr("Trail length when speed is low"), 
                      4, 4, NUMBER, I.tr("(minutes)")) 
          ;
               
@@ -270,9 +263,7 @@ package no.polaric.webconfig
                br ++ br ++
                getField(req, "item1", "aprs.expiretime", 0, 1440) ++ 
                getField(req, "item2", "map.trail.maxPause", 0, 1440) ++
-               getField(req, "item3", "map.trail.maxPause.extended", 0, 1440) ++
-               getField(req, "item4", "map.trail.maxAge", 0, 1440) ++
-               getField(req, "item5", "map.trail.maxAge.extended", 0, 1440) 
+               getField(req, "item4", "map.trail.maxAge", 0, 1440) 
           }
               
           printHtml (res, htmlBody (req, null, htmlForm(req, prefix, IF_ADMIN(fields), IF_ADMIN(action), false, default_submit)))
