@@ -3,7 +3,6 @@
 LANGUAGE_EXTEND('config/auto/webconfig/i18n');
 
 
-
 ctxtMenu.addCallback("MAIN", function (m)
 {     
       if (!isAdmin() && !canUpdate())
