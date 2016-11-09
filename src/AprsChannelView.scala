@@ -39,7 +39,7 @@ package no.polaric.webconfig
    
          def is_aprsis = wasType.equals("APRSIS"); 
          def is_tcpkiss = wasType.equals("TCPKISS"); 
-
+         def is_kiss = wasType.equals("KISS");
             
          protected def aprstraffic: NodeSeq = 
              simpleLabel("info1", "leftlab", I.tr("Heard stations")+":", TXT(""+model.nHeard())) ++
@@ -61,7 +61,13 @@ package no.polaric.webconfig
              else EMPTY
              ;
            
-              
+        protected def kissport: NodeSeq =
+            if (is_tcpkiss || is_kiss)
+               textField(chp+".kissport", "item17",
+                  I.tr("Kiss Port")+":",
+                  I.tr("Port number (0 by default)"), 2, 2, NUMBER)
+             else EMPTY
+             ;
              
          override def fields(req : Request): NodeSeq =  
               state ++
@@ -75,7 +81,7 @@ package no.polaric.webconfig
                     aprsis
                  else 
                     serialport
-              } ++ br ++
+              } ++ kissport ++ br ++
               visibility
               ;
          
@@ -96,6 +102,11 @@ package no.polaric.webconfig
                 else
                    getField(req, "item8", chp+".port", NAME) ++
                    getField(req, "item9", chp+".baud", 300, 999999)
+              } ++
+              { if (is_tcpkiss || is_kiss)
+                   getField(req, "item17", chp+".kissport", 0,16)
+                else
+                   EMPTY
               } ++
               action_visibility ++
               action_activate
