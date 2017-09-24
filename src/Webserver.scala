@@ -6,11 +6,11 @@ import scala.collection.JavaConversions._
 import no.polaric.aprsd._
 import no.polaric.aprsd.http.ServerUtils
 import no.polaric.aprsd.http.ServerBase
-import org.simpleframework.http.core.Container
-import org.simpleframework.transport.connect.Connection
-import org.simpleframework.transport.connect.SocketConnection
-import org.simpleframework.http._
 import org.xnap.commons.i18n._
+import spark.Request;
+import spark.Response;
+
+
 
 
 package no.polaric.webconfig
@@ -62,9 +62,9 @@ package no.polaric.webconfig
            val head = <link href={fprefix(req)+"/config_menu.css"} rel="stylesheet" type="text/css" />
            val heads = if (xhead==null) head else head ++ xhead 
            
-           var selected = req.getParameter("mid")           
+           var selected = req.queryParams("mid")           
            selected = if (selected==null) "1" else selected
-           var lang = req.getParameter("lang")
+           var lang = req.queryParams("lang")
            lang = if (lang==null) "en" else lang
            
            
@@ -127,7 +127,7 @@ package no.polaric.webconfig
        */
       def handle_config_menu(req : Request, res: Response) =
       {
-          var lang = req.getParameter("lang")
+          var lang = req.queryParams("lang")
           lang = if (lang==null) "en" else lang
           
           def action(req : Request): NodeSeq =
@@ -366,7 +366,7 @@ package no.polaric.webconfig
      def handle_config_chan(req: Request, res: Response) = 
      {
          val I = getI18n(req, _defs.PLUGIN)        
-         val cid = req.getParameter("chan")
+         val cid = req.queryParams("chan")
          val prefix = <h3>{I.tr("Channel")+ " '"+cid+"'"}</h3>
          val ch = _api.getChanManager().get(cid).asInstanceOf[Channel]
            
@@ -417,9 +417,9 @@ package no.polaric.webconfig
           
           def action(req : Request): NodeSeq = 
           {
-             username = if (authorizedForAdmin(req)) req.getParameter("item1") 
+             username = if (authorizedForAdmin(req)) req.queryParams("item1") 
                         else username
-             val passwd = req.getParameter("item2")             
+             val passwd = req.queryParams("item2")             
              val cmd = "/usr/bin/sudo /usr/bin/htpasswd -b /etc/polaric-webapp/users "+username+" "+passwd
              val p = Runtime.getRuntime().exec(cmd)
              val res = p.waitFor()

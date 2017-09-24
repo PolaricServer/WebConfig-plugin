@@ -15,13 +15,11 @@
 import java.util._
 import java.io._
 import scala.xml._
-import org.simpleframework.transport.connect.Connection
-import org.simpleframework.transport.connect.SocketConnection
-import org.simpleframework.http._
 import uk.me.jstott.jcoord._
 import no.polaric.aprsd._
 import no.polaric.aprsd.http.ServerUtils
-
+import spark.Request;
+import spark.Response;
 
 import org.xnap.commons.i18n._
 
@@ -65,15 +63,15 @@ package no.polaric.webconfig
       
       protected def refreshPage(req: Request, resp: Response, t: Int, url: String) = 
       {
-         val mid = req.getParameter("mid");
-         val cid = req.getParameter("chan");
-         var lang = req.getParameter("lang");
+         val mid = req.queryParams("mid");
+         val cid = req.queryParams("chan");
+         var lang = req.queryParams("lang");
          lang = if (lang==null) "en" else lang
          val uparm = "?lang=" + lang + 
            { if (mid != null) "&mid="+mid else "" } + 
            { if (cid != null) "&chan="+cid else "" }
             
-         resp.addValue("Refresh", t+";url=\""+url + uparm+"\"")
+         resp.header("Refresh", t+";url=\""+url + uparm+"\"")
       }
       
 
@@ -187,23 +185,23 @@ package no.polaric.webconfig
     
       
       protected def getField(req : Request, id: String, propname: String, pattern: String): NodeSeq =
-          _getField(req, req.getParameter(id), propname, pattern, false, 0,0)
+          _getField(req, req.queryParams(id), propname, pattern, false, 0,0)
           ;
           
           
       protected def getField(req : Request, id1: String, id2: String, propname: String, pattern: String): NodeSeq =
-          _getField(req, req.getParameter(id1)+req.getParameter(id2), propname, pattern, false, 0,0)
+          _getField(req, req.queryParams(id1)+req.queryParams(id2), propname, pattern, false, 0,0)
           ;
    
    
       protected def getUtmField(req : Request, id1: String, id2: String, id3: String, id4: String, propname: String, pattern: String): NodeSeq =
-          _getField(req, req.getParameter(id1)+req.getParameter(id2)+" "+req.getParameter(id3)+" "+req.getParameter(id4), 
+          _getField(req, req.queryParams(id1)+req.queryParams(id2)+" "+req.queryParams(id3)+" "+req.queryParams(id4), 
                     propname, pattern, false, 0,0)
           ;
           
           
       protected def getField(req : Request, id: String, propname: String, min: Int, max: Int): NodeSeq = 
-          _getField(req, req.getParameter(id), propname, NUMBER, true, min, max)
+          _getField(req, req.queryParams(id), propname, NUMBER, true, min, max)
           ; 
            
       

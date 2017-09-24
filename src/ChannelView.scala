@@ -16,13 +16,13 @@
 import java.util._
 import java.io._
 import scala.xml._
-import org.simpleframework.transport.connect.Connection
-import org.simpleframework.transport.connect.SocketConnection
-import org.simpleframework.http._
 import uk.me.jstott.jcoord._
 import no.polaric.aprsd._
 import no.polaric.aprsd.http._
 import org.xnap.commons.i18n._
+import spark.Request;
+import spark.Response;
+
 
 
 
@@ -52,7 +52,7 @@ package no.polaric.webconfig
              extends ServerBase(api) with ConfigUtils
    {
          val I = getI18n(req, _defs.PLUGIN);
-         val cid = req.getParameter("chan")
+         val cid = req.queryParams("chan")
          val chp = "channel."+cid
          val prefix = <h3>{I.tr("Channel")+ " '"+cid+"'"}</h3>
          val is_backup = _api.getChanManager().isBackup(cid);
